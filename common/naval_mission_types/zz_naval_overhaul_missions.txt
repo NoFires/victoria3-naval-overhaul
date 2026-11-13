@@ -1,0 +1,26 @@
+﻿# Non-destructive TRY_INJECT overlays for naval missions
+TRY_INJECT:naval_mission_type_intercept = {
+	command_modifier = {
+		ship_detection_mult = 0.20
+	}
+}
+
+TRY_INJECT:naval_mission_type_protect_supply = {
+	command_modifier = {
+		ship_detection_mult = 0.15
+		ship_screening_mult = 0.15
+	}
+}
+
+TRY_INJECT:naval_mission_type_raid_supply = {
+	command_modifier = {
+		ship_visibility_mult = -0.15
+		ship_detection_add = 4
+	}
+}
+
+TRY_INJECT:naval_mission_type_blockade = {
+	command_modifier = {
+		ship_blockade_strength_mult = 0.25
+	}
+}

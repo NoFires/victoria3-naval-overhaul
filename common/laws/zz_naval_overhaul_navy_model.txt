@@ -1,0 +1,28 @@
+﻿# Non-destructive TRY_INJECT overlays for Navy Model laws (compatible with NTE & political mods)
+TRY_INJECT:law_merchant_navy = {
+	modifier = {
+		ship_screening_mult = 0.10
+		country_navy_goods_cost_mult = -0.10
+	}
+}
+
+TRY_INJECT:law_jeune_ecole = {
+	modifier = {
+		ship_visibility_mult = -0.10
+		character_convoy_raiding_mult = 0.15
+	}
+}
+
+TRY_INJECT:law_professional_navy = {
+	modifier = {
+		ship_readiness_gain_mult = 0.10
+		ship_detection_mult = 0.10
+	}
+}
+
+TRY_INJECT:law_diplomatic_navy = {
+	modifier = {
+		ship_blockade_strength_mult = 0.10
+		country_navy_goods_cost_mult = -0.05
+	}
+}

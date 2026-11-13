@@ -1,0 +1,187 @@
+﻿# ==============================================================================
+# Victoria 3 Naval Overhaul - Hull & Secondary Battery Modifications
+# ==============================================================================
+
+ship_mod_hull_standard = {
+	type = ship_mod_slot_hull
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_low.dds"
+	modifier = {
+		ship_hit_points_max_mult = 0.05
+		ship_supply_capacity_add = 5
+	}
+	construction_goods = {
+		goods_input_wood_add = 25
+	}
+	ai_weight = {
+		value = 1.0
+		multiply = ship_mod_market_multiplier
+	}
+}
+
+ship_mod_hull_reinforced = {
+	type = ship_mod_slot_hull
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_high.dds"
+	unlocking_technologies = { ironclad_tech }
+	modifier = {
+		ship_hit_points_max_mult = 0.20
+		ship_armor_add = 12
+		ship_movement_speed_add = -1
+		ship_supply_capacity_add = -4
+	}
+	construction_goods = {
+		goods_input_steel_add = 45
+		goods_input_iron_add = 30
+	}
+	ai_weight = {
+		value = 1.25
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_capital_doctrine
+	}
+}
+
+ship_mod_hull_lightweight = {
+	type = ship_mod_slot_hull
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_propulsion_high.dds"
+	unlocking_technologies = { screw_frigate }
+	modifier = {
+		ship_hit_points_max_mult = -0.10
+		ship_movement_speed_add = 2
+		ship_visibility_mult = -0.10
+		ship_supply_capacity_add = 12
+	}
+	construction_goods = {
+		goods_input_steel_add = 30
+		goods_input_engines_add = 15
+	}
+	ai_weight = {
+		value = 1.20
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_jeune_ecole_doctrine
+	}
+}
+
+ship_mod_hull_subdivided = {
+	type = ship_mod_slot_hull
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_mid.dds"
+	unlocking_technologies = { pre_dreadnought_tech }
+	modifier = {
+		ship_hit_points_max_mult = 0.12
+		ship_suffered_crit_chance_mult = -0.20
+		ship_suffered_hull_damage_mult = -0.10
+		ship_supply_capacity_add = -3
+	}
+	construction_goods = {
+		goods_input_steel_add = 50
+	}
+	ai_weight = {
+		value = 1.35
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_capital_doctrine
+	}
+}
+
+# ==============================================================================
+# Secondary Battery Modifications
+# ==============================================================================
+
+ship_mod_secondary_standard = {
+	type = ship_mod_slot_secondary
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_low.dds"
+	modifier = {
+		ship_hull_damage_add = 2
+		ship_crew_damage_add = 2
+		ship_screening_add = 3
+	}
+	construction_goods = {
+		goods_input_artillery_add = 10
+	}
+	ai_weight = {
+		value = 1.0
+		multiply = ship_mod_market_multiplier
+	}
+}
+
+ship_mod_secondary_torpedo_defense = {
+	type = ship_mod_slot_secondary
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_mid.dds"
+	unlocking_technologies = { self_propelled_torpedoes }
+	modifier = {
+		ship_screening_add = 14
+		ship_readiness_gain_add = 4
+		ship_battle_against_ship_type_torpedo_boat_accuracy_mult = 0.35
+		ship_battle_against_ship_type_destroyer_accuracy_mult = 0.25
+		ship_visibility_add = 2
+	}
+	construction_goods = {
+		goods_input_artillery_add = 25
+		goods_input_ammunition_add = 20
+	}
+	ai_weight = {
+		value = 1.30
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_capital_doctrine
+	}
+}
+
+ship_mod_secondary_heavy_aa = {
+	type = ship_mod_slot_secondary
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_high.dds"
+	unlocking_technologies = { battleship_tech }
+	modifier = {
+		ship_screening_add = 24
+		ship_battle_against_ship_type_torpedo_boat_accuracy_mult = 0.20
+		ship_battle_against_ship_type_destroyer_accuracy_mult = 0.15
+		ship_visibility_add = 4
+	}
+	construction_goods = {
+		goods_input_artillery_add = 35
+		goods_input_ammunition_add = 30
+	}
+	ai_weight = {
+		value = 1.25
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_power_projection_doctrine
+	}
+}
+
+ship_mod_secondary_asw_depth_charges = {
+	type = ship_mod_slot_secondary
+	icon = "gfx/interface/icons/military_icons/navy_icons/supplies_navy.dds"
+	unlocking_technologies = { destroyer }
+	modifier = {
+		ship_detection_add = 12
+		ship_battle_against_ship_type_submarine_accuracy_mult = 0.60
+	}
+	construction_goods = {
+		goods_input_ammunition_add = 30
+		goods_input_steel_add = 20
+	}
+	ai_weight = {
+		value = 1.50
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_coastal_defence_doctrine
+	}
+}
+
+ship_mod_secondary_dual_purpose = {
+	type = ship_mod_slot_secondary
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_high.dds"
+	unlocking_technologies = { battleship_tech }
+	modifier = {
+		ship_hull_damage_add = 6
+		ship_crew_damage_add = 6
+		ship_screening_add = 15
+		ship_readiness_gain_add = 4
+		ship_visibility_add = 4
+		ship_supply_capacity_add = -4
+	}
+	construction_goods = {
+		goods_input_artillery_add = 40
+		goods_input_ammunition_add = 35
+	}
+	ai_weight = {
+		value = 1.30
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_power_projection_doctrine
+	}
+}

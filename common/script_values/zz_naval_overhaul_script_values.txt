@@ -1,0 +1,127 @@
+﻿# Precision REPLACE for naval_battle_size only (preserves land_battle_size & other mods' command_values)
+REPLACE:naval_battle_size = {
+	value = 0
+	if = {
+		limit = {
+			exists = scope:military_formation
+			scope:military_formation = { is_fleet = yes }
+		}
+		value = {
+			add = scope:military_formation.num_ships_not_in_battle
+			desc = "NAVAL_BATTLE_SIZE_ADMIRAL_SHARE"
+		}
+	}
+	else_if = {
+		limit = {
+			exists = scope:military_formation
+		}
+		value = {
+			add = scope:military_formation.num_assigned_supply_ships
+			desc = "NAVAL_BATTLE_SIZE_ADMIRAL_SHARE"
+		}
+	}
+	else = {
+		value = {
+			add = scope:enemy_military_formation.num_ships
+			desc = "NAVAL_BATTLE_SIZE_ADMIRAL_SHARE"
+		}
+	}
+
+	save_temporary_value_as = pre_max_amount_cap
+
+	if = {
+		limit = {
+			exists = scope:own_commander
+			scope:pre_max_amount_cap > {
+				value = 0
+				scope:own_commander = {
+					add = this.command_limit_num_units
+				}
+				multiply = 0.5
+			}
+		}
+		max = {
+			add = {
+				scope:own_commander = {
+					add = this.command_limit_num_units
+				}
+			}
+			multiply = 0.5
+			desc = "[concept_command_limit]"
+		}
+		min = define:NMilitary|MILITARY_FORMATION_COMMAND_LIMIT_NO_COMMANDER
+	}
+	else_if = {
+		limit = {
+			NOT = { exists = scope:own_commander }
+		}
+		max = define:NMilitary|MILITARY_FORMATION_COMMAND_LIMIT_NO_COMMANDER
+	}
+
+	save_temporary_value_as = post_command_limit_base_amount_cap
+
+	# Custom Formula: ((Own Detection * Enemy Visibility) / (Enemy Detection * Own Visibility)) * Enemy Ships * 0.25
+	if = {
+		limit = {
+			exists = scope:military_formation
+			exists = scope:enemy_military_formation
+			scope:military_formation = { is_fleet = yes }
+			scope:enemy_military_formation = { is_fleet = yes }
+		}
+		value = scope:post_command_limit_base_amount_cap
+		add = {
+			add = {
+				scope:military_formation = {
+					add = this.detection
+				}
+			}
+			multiply = scope:enemy_military_formation.visibility
+
+			divide = {
+				value = 0
+				add = {
+					scope:enemy_military_formation = {
+						add = this.detection
+					}
+				}
+				min = 1
+
+				multiply = {
+					value = scope:military_formation.visibility
+					min = 1
+				}
+			}
+
+			min = 0.35
+			max = 2.5
+
+			multiply = scope:enemy_military_formation.num_ships_not_in_battle
+			multiply = 0.25
+		}
+	}
+	else_if = {
+		limit = {
+			exists = scope:military_formation
+			exists = scope:enemy_military_formation
+		}
+		value = scope:post_command_limit_base_amount_cap
+	}
+	else_if = {
+		limit = {
+			exists = scope:military_formation
+			NOT = { exists = scope:enemy_military_formation }
+		}
+		value = scope:post_command_limit_base_amount_cap
+		add = scope:military_formation.num_ships_not_in_battle
+	}
+	else = {
+		value = scope:post_command_limit_base_amount_cap
+		add = scope:enemy_military_formation.num_ships_not_in_battle
+	}
+}
+
+# AI Utility & Hull/Secondary Weight Helpers (calibrated for Vanilla & Kuromi SHIP_DESIGN_UTILITY_MOD_MIN_SCORE = 1.125)
+naval_overhaul_ai_utility_base = {
+	value = 1.2
+	multiply = ship_mod_market_multiplier
+}

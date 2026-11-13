@@ -1,0 +1,95 @@
+﻿namespace = naval_overhaul
+
+# Event 1: Naval Doctrine & Arms Race Debate
+naval_overhaul.1 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.1.t
+	desc = naval_overhaul.1.d
+	flavor = naval_overhaul.1.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	option = {
+		name = naval_overhaul.1.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_arms_race_focus
+			days = 1095
+		}
+	}
+
+	option = {
+		name = naval_overhaul.1.b
+		add_modifier = {
+			name = modifier_naval_construction_boom
+			days = 1095
+		}
+	}
+
+	option = {
+		name = naval_overhaul.1.c
+		add_modifier = {
+			name = modifier_naval_victory_morale
+			days = 1095
+		}
+	}
+}
+
+# Event 2: Fleet Exercises & Asymmetric Counter-Play
+naval_overhaul.2 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.2.t
+	desc = naval_overhaul.2.d
+	flavor = naval_overhaul.2.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = {
+		navy_size >= 30
+		OR = {
+			has_technology_researched = submarine
+			has_technology_researched = dreadnought_tech
+		}
+		NOT = { has_variable = naval_overhaul_exercise_cooldown }
+	}
+
+	immediate = {
+		set_variable = {
+			name = naval_overhaul_exercise_cooldown
+			days = 1825
+		}
+	}
+
+	option = {
+		name = naval_overhaul.2.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_victory_morale
+			days = 730
+		}
+	}
+
+	option = {
+		name = naval_overhaul.2.b
+		add_modifier = {
+			name = modifier_naval_construction_boom
+			days = 730
+		}
+	}
+}

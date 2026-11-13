@@ -1,0 +1,53 @@
+﻿ship_veterancy_none = {
+	icon = "gfx/interface/icons/military_icons/unit_veterancy/no_veterancy.dds"
+}
+
+ship_veterancy_1 = {
+	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy1.dds"
+	experience_threshold = 80
+	modifier = {
+		ship_power_projection_mult = 0.05
+		ship_accuracy_mult = 0.05
+		ship_critical_hit_chance_add = 0.04
+		ship_detection_mult = 0.04
+		ship_suffered_hull_damage_mult = -0.03
+	}
+}
+
+ship_veterancy_2 = {
+	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy2.dds"
+	experience_threshold = 180
+	modifier = {
+		ship_power_projection_mult = 0.10
+		ship_accuracy_mult = 0.10
+		ship_critical_hit_chance_add = 0.08
+		ship_detection_mult = 0.08
+		ship_suffered_hull_damage_mult = -0.05
+	}
+}
+
+ship_veterancy_3 = {
+	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy3.dds"
+	experience_threshold = 360
+	modifier = {
+		ship_power_projection_mult = 0.15
+		ship_readiness_gain_mult = 0.12
+		ship_accuracy_mult = 0.15
+		ship_critical_hit_chance_add = 0.10
+		ship_detection_mult = 0.12
+		ship_suffered_hull_damage_mult = -0.08
+	}
+}
+
+ship_veterancy_4 = {
+	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy4.dds"
+	experience_threshold = 700
+	modifier = {
+		ship_power_projection_mult = 0.20
+		ship_readiness_gain_mult = 0.20
+		ship_accuracy_mult = 0.22
+		ship_critical_hit_chance_add = 0.14
+		ship_detection_mult = 0.16
+		ship_suffered_hull_damage_mult = -0.10
+	}
+}

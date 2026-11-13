@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.dsh-project-memory/
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak

@@ -1,0 +1,32 @@
+﻿NMilitary = {
+	# 10-slot complexity cost scaling (reduced from 1.05 to avoid exponential build-time explosion)
+	SHIP_CONSTRUCTION_COST_MODIFICATION_LEVEL_FACTOR = 1.028
+
+	# Multi-node naval mission decay mitigation
+	NAVAL_MISSION_SUPPLY_COST_FACTOR_SCALING = 0.04		# Vanilla: 0.10
+	NAVAL_MISSION_BASE_MAX_SEA_REGIONS = 3				# Vanilla: 2
+	FLEET_PRESENCE_GAIN_PER_DAY = 0.05					# Vanilla: 0.02 (20 days to full presence vs 50)
+	FLEET_PRESENCE_DECAY_PER_DAY = 0.015				# Vanilla: 0.02
+	FLEET_SPOT_BASE_CHANCE = 0.00008					# Vanilla: 0.00005
+
+	# Naval blockade overhaul (meaningful economic stranglehold without irreversible AI collapse)
+	BLOCKADE_TARGET_STRENGTH_PER_MERCHANT_MARINE = 5	# Vanilla: 10
+	BLOCKADE_WORLD_MARKET_ACCESS_IMPACT_SCALING = 0.85	# Vanilla: 0.75
+	BLOCKADE_SHIPPING_LANE_IMPACT_SCALING = 0.85		# Vanilla: 0.75
+	BLOCKADE_THROUGHPUT_IMPACT_SCALING = 0.85			# Vanilla: 0.75
+	BLOCKADE_SEA_PRESENCE_THRESHOLD = 0.30				# Vanilla: 0.5
+
+	# Port bombardment overhaul (credible coastal threat without wiping coastal industry)
+	BOMBARDMENT_DEVASTATION_MAX = 35.0					# Vanilla: 25.0
+	BOMBARDMENT_DEVASTATION_RATE = 0.30					# Vanilla: 0.20
+	BOMBARDMENT_BUILDING_DAMAGE_BASE_CHANCE = 0.025		# Vanilla: 0.02
+
+	# Convoy raiding overhaul (credible wolfpack & commerce raiding)
+	CONVOY_RAIDING_STRENGTH_MULT = 0.65					# Vanilla: 0.30
+	FLEET_RAID_MAX_SUPPLY_LENGTH_DIVISOR = 3			# Vanilla: 5
+}
+
+NEconomy = {
+	# Supply network shortage impact (makes protecting/raiding lanes decisive)
+	SUPPLY_NETWORK_SHORTAGE_PENALTY_MAX = 0.80			# Vanilla: 0.50
+}

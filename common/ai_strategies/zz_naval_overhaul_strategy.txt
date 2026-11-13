@@ -1,0 +1,23 @@
+﻿# Compatible with Vanilla & Kuromi's AI (loads after 00_ and kai_)
+INJECT:ai_strategy_default = {
+	max_ship_design_complexity = {
+		value = 20
+		add = { # +3 to -3
+			value = country_rank
+			subtract = 4
+		}
+
+		if = {
+			limit = { has_law_or_variant = law_type:law_merchant_navy }
+			subtract = 2
+		}
+		else_if = {
+			limit = { has_law_or_variant = law_type:law_jeune_ecole }
+			subtract = 1
+		}
+		else_if = {
+			limit = { has_law_or_variant = law_type:law_professional_navy }
+			add = 1
+		}
+	}
+}
