@@ -1,6 +1,6 @@
 ﻿NMilitary = {
-	# 10-slot complexity cost scaling (reduced from 1.05 to avoid exponential build-time explosion)
-	SHIP_CONSTRUCTION_COST_MODIFICATION_LEVEL_FACTOR = 1.028
+	# 10-slot complexity cost scaling (balanced so light/medium/high tiers have real build-cost tradeoffs)
+	SHIP_CONSTRUCTION_COST_MODIFICATION_LEVEL_FACTOR = 1.042
 
 	# Multi-node naval mission decay mitigation
 	NAVAL_MISSION_SUPPLY_COST_FACTOR_SCALING = 0.04		# Vanilla: 0.10
@@ -29,4 +29,10 @@
 NEconomy = {
 	# Supply network shortage impact (makes protecting/raiding lanes decisive)
 	SUPPLY_NETWORK_SHORTAGE_PENALTY_MAX = 0.80			# Vanilla: 0.50
+}
+
+NAI = {
+	# Widen AI ship-modification score variance so navies build mixed/cost-effective designs instead of uniform max-tier
+	SHIP_DESIGN_MODIFICATION_RANDOM_FACTOR = 0.65		# Vanilla: 0.25
+	SHIP_DESIGN_UTILITY_MOD_MIN_SCORE = 1.65			# Vanilla: 2.0 (paired with budget multipliers below)
 }

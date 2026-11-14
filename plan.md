@@ -23,42 +23,36 @@
 - **原版痛点**：除 `project_power` 外，任务效率硬性 `1/N` 平摊（C++ 引擎）；`NAVAL_MISSION_SUPPLY_COST_FACTOR_SCALING = 0.1`（每多 1 个海区补给船 `+10%`）；`FLEET_PRESENCE_GAIN_PER_DAY = 0.02`（需 50 天攒满）；`FLEET_SPOT_BASE_CHANCE = 0.00005` 过低；`NAVAL_MISSION_BASE_MAX_SEA_REGIONS = 2`。
 - **对冲方案**：补给增长降至 `0.04`、每日存在增至 `0.05`（20 天满）、提高 `FLEET_SPOT_BASE_CHANCE` 与侦查系 `ship_detection`、10 槽位赋予 `ship_max_distance_to_port_add/mult`、基础海区数提至 `3`。
 
-### 3. 封锁、岸轰、袭击补给加强
-- **封锁（Blockade）**：商船门槛系数 `10 → 4`；封锁对世界市场/海运/吞吐削弱上限提至 `0.90`；生效存在门槛 `0.5 → 0.25`。
-- **岸轰（Port Bombardment）**：`BOMBARDMENT_DEVASTATION_MAX` `25.0 → 50.0`；日增率 `0.20 → 0.50`；日拆沿海建筑概率 `0.02 → 0.06`。
-- **袭击补给（Raid Supply）**：`CONVOY_RAIDING_STRENGTH_MULT` `0.3 → 0.65`；`FLEET_RAID_MAX_SUPPLY_LENGTH_DIVISOR` `5 → 3`；`SUPPLY_NETWORK_SHORTAGE_PENALTY_MAX` `0.5 → 0.80`。
+### 3. 封锁、岸轰、袭击补给加强（实装数值见 `01_naval_overhaul_defines.txt`）
+- **封锁（Blockade）**：商船门槛系数 `10 → 5`；封锁对世界市场/海运/吞吐削弱上限 `0.75 → 0.85`；生效存在门槛 `0.50 → 0.30`。
+- **岸轰（Port Bombardment）**：`BOMBARDMENT_DEVASTATION_MAX` `25.0 → 35.0`；日增率 `0.20 → 0.30`；日拆沿海建筑概率 `0.02 → 0.025`（并在任务中附加 `+15%` 可视性暴露代价）。
+- **袭击补给（Raid Supply）**：`CONVOY_RAIDING_STRENGTH_MULT` `0.30 → 0.65`；`FLEET_RAID_MAX_SUPPLY_LENGTH_DIVISOR` `5 → 3`；`SUPPLY_NETWORK_SHORTAGE_PENALTY_MAX` `0.50 → 0.80`。
 
 ---
 
-## 三、五大核心系统与 4 阶段路线图
+## 三、五大核心系统与演进状态
 
-1. **Phase 1（GUI 10 槽扩展 + `defines` 回调与任务加强）**：
-   - 仅修改 `gui/ship_designer_popup.gui` 使 `modification_slot` 自适应高度并将选项容器改造成 3 列自动换行 `dynamicgridbox`；
-   - 创建 `common/defines/01_naval_overhaul_defines.txt` 与 `common/ship_modification_slots/00_ship_modification_slots.txt`（6 核心槽 + 4 Utility 槽 = 10 槽）。
-2. **Phase 2（沙盒验证 + 舰种与 10 槽配件实装）**：
-   - 按 6 步真实公式升级 `v3_naval_sandbox.py` 并运行矩阵测试；
-   - 实装 `common/ship_types/`、`common/ship_modifications/`（含均衡 `default_modifications`）及中英本地化。
-3. **Phase 3（经济反哺 + 公式安全阀 + 任务/海况/老练度）**：
-   - 调整 `building_port` / `building_shipyard` PM 产出经济反哺；
-   - 为 `command_values.txt` 增加侦查倍率上下限安全阀；
-   - 重做 `naval_mission_types`、`naval_battle_conditions`、`ship_veterancy_levels`。
-4. **Phase 4（海权 AI + 风味事件与军备竞赛）**：
-   - 实装 `ai_strategies`（海洋霸权/破交/近海防御 + `max_ship_design_complexity` 匹配 10 槽）与配件 `ai_weight`；
-   - 实装 `on_actions`、`journal_entries`（海军军备竞赛 & 演习）与 `events`。
+1. **Phase 1（已实装 — GUI 10 槽扩展 + `defines` 回调）**：
+   - 仅修改 `gui/ship_designer_popup.gui` 使 `modification_slot` 自适应高度、支持 3 列自动换行及 `[ShipTemplate.GetModifier]` 动态克制属性绑定；
+   - 创建 `common/defines/01_naval_overhaul_defines.txt` 与 `common/ship_modification_slots/00_ship_modification_slots.txt`（6 核心槽 + 4 Utility 槽 = 10 槽，10 个互斥图标）。
+2. **Phase 2（已实装 — 沙盒验证 + 22 舰种与 10 槽配件实装）**：
+   - 使用 `sim_overhaul.py` 实现真实 VFS 合并、6 步固定护甲减伤模型与回归门禁；
+   - 实装 `common/ship_types/`（含全部 22 舰种均衡 `default_modifications`、补给舰 4 槽零火炮还原、探照灯/迷彩恢复）、`common/ship_modifications/` 及中英双语本地化。
+3. **Phase 3（已实装部分 / 待扩展 Backlog）**：
+   - **已实装**：`zz_naval_overhaul_script_values.txt`（`REPLACE:naval_battle_size` 侦察上下限安全阀与指挥上限保护）、`zz_naval_overhaul_missions.txt` 与 `ship_veterancy_levels`（4 级老练度重做）。
+   - **待规划 Backlog**：`building_port` / `building_shipyard` PM 经济反哺与 `naval_battle_conditions` 海战天气重做（当前版本尚未包含）。
+4. **Phase 4（已实装 — 海权 AI + 风味事件与军备竞赛）**：
+   - 实装 `zz_naval_overhaul_strategy.txt`（`INJECT:ai_strategy_default` 增量注入 `max_ship_design_complexity` 匹配 10 槽）与全配件 `ai_weight`；
+   - 实装 `on_actions`、`je_naval_arms_race`（含完成防重入与失地失效出口）与 `events/naval_overhaul_events.txt`。
 
 ---
 
-## 四、当前已识别收口项与质量加固（Phase 4.5）
+## 四、质量加固与已闭环验收项
 
-1. **全舰种 `default_modifications` 补齐（PVP & 后期减负）**：
-   - 当前仅 `ship_of_the_line`、`frigate`、`early_troop_ship`、`supply_ship` 配有默认蓝图，其余 18 个舰种（含无畏舰、航母、潜艇、驱逐舰）需全部补齐均衡的开箱即用 `default_modifications`。
-2. **AI 10 槽复杂度解锁**：
-   - `common/ai_strategies/00_default_strategy.txt` 中 `max_ship_design_complexity` 当前仍为原版基础值 `20`，需上调以匹配 10 槽位改装预算，避免 AI 后期因复杂度不足造不出高阶协防舰队。
-3. **科技前置与时代沉浸感校准**：
-   - 为 `utility_mod_fire_control_radar`、`utility_mod_sonar_suite`、`utility_mod_aa_director`、`utility_mod_snorkel`、`utility_mod_autoloader` 等末期/超前配件补充合理的 `unlocking_technologies` 时代锁，避免 1836–1890 年代过早出现二战级电子/潜艇设备。
-4. **本地化 Key 对齐与 `utility` 槽位审查**：
-   - 对齐 `common/ship_modifications/` 与 `localization/` 中残留不一致的 Key（如 `utility_mod_sonar_suite` vs `utility_mod_sonar_asw`、`utility_mod_minesweeping_gear` vs `utility_mod_mine_sweeper`、`ship_mod_hull_subdivided` vs `ship_mod_hull_stealth`），确保 `error.log` 零缺失报错。
-   - 核查 `utility_1..4` 槽位重复装备同一配件的叠加边界，必要时对高敏配件加设互斥或槽位限制。
+1. **全舰种 `default_modifications` 与补给舰隔离**：全部 22 个舰种均已配备科技树合法的 `default_modifications`，补给舰维持原版 4 槽零火炮消耗。
+2. **AI 10 槽复杂度解锁**：`zz_naval_overhaul_strategy.txt` 通过 `add = 12` 增量叠加在原版/Kuromi `10` 基底上，提供 `22` 基准复杂度并补充外交海军分支。
+3. **科技前置与时代校准**：`utility_mod_aa_director` 锁至 `military_aviation` 且移出早期鱼雷艇/驱逐领舰，恢复原版 `utility_mod_searchlights` 与 `utility_mod_camouflage`。
+4. **本地化与工具链对齐**：消除双语重复键与孤儿键，修正 10 处配件描述与实际修正对齐，扩展 `sim_overhaul.py --assert-mode` 实现全仓 BOM/修正白名单/本地化对称性/战斗矩阵自动门禁。
 
 ---
 

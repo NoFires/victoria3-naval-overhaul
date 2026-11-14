@@ -19,13 +19,23 @@
 	possible = {
 		has_technology_researched = dreadnought_tech
 		navy_size >= 40
+		NOT = { has_variable = naval_arms_race_completed }
+		NOT = { has_variable = naval_arms_race_frozen_cd }
+		NOR = {
+			AND = {
+				has_variable = gnl_participating_country
+				NOT = { has_variable = nte_escalator_clause_active }
+			}
+			has_variable = nte_bilateral_restricted_flag
+		}
 	}
 
 	immediate = {
 		add_modifier = {
-			name = naval_overhaul_arms_race_momentum
+			name = modifier_naval_arms_race_momentum
 			months = 60
 		}
+		debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_STARTED|country=[THIS.GetCountry.GetNameNoFormatting]"
 	}
 
 	outcome = {
@@ -37,9 +47,60 @@
 			navy_size >= 80
 		}
 		effect = {
+			set_variable = naval_arms_race_completed
+			debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_COMPLETED|country=[THIS.GetCountry.GetNameNoFormatting]"
 			trigger_event = {
 				id = naval_overhaul.1
 				popup = yes
+			}
+		}
+	}
+
+	outcome = {
+		header = je_naval_arms_race_treaty_freeze_header
+		effect_header = je_naval_arms_race_treaty_freeze_effect_header
+		color = "blue_negative"
+		conclusion_desc = je_naval_arms_race_treaty_freeze_desc
+		trigger = {
+			OR = {
+				AND = {
+					has_variable = gnl_participating_country
+					NOT = { has_variable = nte_escalator_clause_active }
+				}
+				has_variable = nte_bilateral_restricted_flag
+			}
+		}
+		effect = {
+			set_variable = {
+				name = naval_arms_race_frozen_cd
+				months = 12
+			}
+			debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_FROZEN_BY_TREATY|country=[THIS.GetCountry.GetNameNoFormatting]"
+			if = {
+				limit = { has_modifier = modifier_naval_arms_race_momentum }
+				remove_modifier = modifier_naval_arms_race_momentum
+			}
+			if = {
+				limit = { has_modifier = modifier_naval_arms_race_focus }
+				remove_modifier = modifier_naval_arms_race_focus
+			}
+		}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = {
+				any_scope_state = {
+					is_coastal = yes
+				}
+			}
+		}
+		effect = {
+			if = {
+				limit = { has_modifier = modifier_naval_arms_race_momentum }
+				remove_modifier = modifier_naval_arms_race_momentum
 			}
 		}
 	}

@@ -18,6 +18,6 @@
 - **AI 同步匹配**：修改槽位数后，必须同步在 `ai_strategies` 中上调 `max_ship_design_complexity` 并为所有配件编写合理 `ai_weight` 与供需感知权重。
 
 ## 3. 目录与沙盒约定
-- 根目录下的 `app.py`、`v3_naval_sandbox.py`、`data.py`、`*.json` 为本地数值推演与解析工具，游戏不加载。
-- 修改 `ship_types` 或 `ship_modifications` 前，先通过 `v3_naval_sandbox.py` 验证 6 步战斗模型数值平衡。
-- 所有新增 Key 均需同时提供 `localization/simp_chinese/` 与 `localization/english/`，确保 `error.log` 零缺失报错。
+- 根目录下的 `sim_overhaul.py` 为本地离线数值推演、VFS 合并检验与静态审计工具，游戏不加载；`docs/architecture/review/` 用于存放架构评审报告，均未通过 Junction 映射至游戏 Mod 目录。
+- 修改 `ship_types` 或 `ship_modifications` 前，先通过 `python -B sim_overhaul.py --assert-mode` 验证 VFS 冲突、UTF-8 BOM、双语本地化闭包、AI 复杂度预算与 6 步战斗模型数值平衡。
+- 所有新增 Key 均需同时提供 `localization/simp_chinese/` 与 `localization/english/`，确保 `error.log` 零缺失报错，且 `.txt` / `.yml` / `.gui` 文件均保留 UTF-8 BOM（`EF BB BF`）。

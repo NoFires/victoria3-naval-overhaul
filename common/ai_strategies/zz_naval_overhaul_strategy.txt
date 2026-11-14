@@ -1,7 +1,8 @@
 ﻿# Compatible with Vanilla & Kuromi's AI (loads after 00_ and kai_)
+# NOTE: INJECT:ai_strategy_default replaces same-named sub-blocks; keep full Vanilla base values before adding Overhaul deltas.
 INJECT:ai_strategy_default = {
 	max_ship_design_complexity = {
-		value = 20
+		value = 10
 		add = { # +3 to -3
 			value = country_rank
 			subtract = 4
@@ -17,7 +18,234 @@ INJECT:ai_strategy_default = {
 		}
 		else_if = {
 			limit = { has_law_or_variant = law_type:law_professional_navy }
+			add = 3
+		}
+		else_if = {
+			limit = { has_law_or_variant = law_type:law_diplomatic_navy }
+			add = 2
+		}
+
+		# 10-slot baseline offset (+6 so Rank-4 base = 16 and Great Powers = 19..24 with fiscal/doctrine tradeoffs)
+		add = 6
+
+		# Military wage & fiscal reality
+		if = {
+			limit = { military_wage_level = very_high }
+			add = 2
+		}
+		else_if = {
+			limit = { military_wage_level = high }
 			add = 1
+		}
+		else_if = {
+			limit = { military_wage_level = low }
+			subtract = 2
+		}
+		else_if = {
+			limit = { military_wage_level = very_low }
+			subtract = 4
+		}
+
+		if = {
+			limit = { is_at_war = yes }
+			add = 1
+		}
+
+		if = {
+			limit = { in_default = yes }
+			subtract = 4
+		}
+		else_if = {
+			limit = { scaled_debt >= 0.30 }
+			subtract = 3
+		}
+		else_if = {
+			limit = { scaled_debt >= 0.15 }
+			subtract = 1
+		}
+
+		if = {
+			limit = {
+				OR = {
+					has_strategy = ai_strategy_armed_isolationism
+					has_strategy = ai_strategy_conservative_agenda
+				}
+			}
+			subtract = 1
+		}
+		else_if = {
+			limit = { has_strategy = ai_strategy_maintain_power_balance }
+			add = 1
+		}
+
+		min = 8
+	}
+
+	ai_ship_category_weights = {
+		ai_ship_category_battle_line = {
+			value = 30
+
+			if = {
+				limit = { has_technology_researched = self_propelled_torpedoes }
+				subtract = 10
+			}
+
+			if = {
+				limit = { has_law_or_variant = law_type:law_professional_navy }
+				add = 10
+			}
+			else_if = {
+				limit = { has_law_or_variant = law_type:law_jeune_ecole }
+				subtract = 10
+			}
+			else_if = {
+				limit = { has_law_or_variant = law_type:law_merchant_navy }
+				subtract = 10
+			}
+
+			if = {
+				limit = {
+					has_technology_researched = ironclad_tech
+					NOT = { has_technology_researched = pre_dreadnought_tech }
+				}
+
+				if = {
+					limit = {
+						OR = {
+							has_law_or_variant = law_type:law_merchant_navy
+							has_law_or_variant = law_type:law_jeune_ecole
+						}
+					}
+					subtract = 10
+				}
+			}
+		}
+		ai_ship_category_coastal_defense = {
+			value = 0
+
+			if = {
+				limit = {
+					NOT = { has_technology_researched = pre_dreadnought_tech }
+				}
+
+				if = {
+					limit = { has_law_or_variant = law_type:law_merchant_navy }
+					add = 20
+				}
+				else_if = {
+					limit = { has_law_or_variant = law_type:law_jeune_ecole }
+					add = 10
+				}
+			}
+		}
+		ai_ship_category_screens = {
+			value = 30
+			if = {
+				limit = { has_technology_researched = self_propelled_torpedoes }
+				subtract = 10
+			}
+
+			if = {
+				limit = {
+					has_technology_researched = submarine
+					OR = {
+						has_law_or_variant = law_type:law_jeune_ecole
+						has_law_or_variant = law_type:law_merchant_navy
+					}
+				}
+				subtract = 10
+			}
+
+			if = {
+				limit = {
+					OR = {
+						has_law_or_variant = law_type:law_merchant_navy
+						has_law_or_variant = law_type:law_diplomatic_navy
+						has_law_or_variant = law_type:law_jeune_ecole
+					}
+				}
+				add = 10
+			}
+		}
+		ai_ship_category_torpedo_craft = {
+			value = 20
+
+			if = {
+				limit = { has_law_or_variant = law_type:law_jeune_ecole }
+				add = 20
+			}
+			else_if = {
+				limit = { has_law_or_variant = law_type:law_merchant_navy }
+				add = 10
+			}
+
+			if = {
+				limit = {
+					has_technology_researched = submarine
+					OR = {
+						has_law_or_variant = law_type:law_jeune_ecole
+						has_law_or_variant = law_type:law_merchant_navy
+					}
+				}
+				subtract = 10
+			}
+
+			if = {
+				limit = { has_technology_researched = destroyer }
+				add = 8
+			}
+		}
+		ai_ship_category_submarines = {
+			value = 0
+			if = {
+				limit = {
+					has_technology_researched = submarine
+					OR = {
+						has_law_or_variant = law_type:law_jeune_ecole
+						has_law_or_variant = law_type:law_merchant_navy
+					}
+				}
+				add = 20
+			}
+			# Overhaul: enable auxiliary submarine flotillas for Professional & Diplomatic Navies
+			else_if = {
+				limit = {
+					has_technology_researched = submarine
+					NOR = {
+						has_law_or_variant = law_type:law_jeune_ecole
+						has_law_or_variant = law_type:law_merchant_navy
+					}
+				}
+				add = 8
+				if = {
+					limit = { is_at_war = yes }
+					add = 4
+				}
+			}
+		}
+		ai_ship_category_carriers = {
+			value = 0
+
+			if = {
+				limit = {
+					OR = {
+						has_law_or_variant = law_type:law_professional_navy
+						has_law_or_variant = law_type:law_jeune_ecole
+					}
+				}
+				add = 5
+			}
+
+			if = {
+				limit = {
+					has_technology_researched = carrier_tech
+					has_law_or_variant = law_type:law_professional_navy
+				}
+				add = 5
+			}
+		}
+		ai_ship_category_transports = {
+			value = 20
 		}
 	}
 }

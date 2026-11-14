@@ -1,4 +1,10 @@
-﻿on_ship_constructed = {
+﻿on_game_started = {
+	on_actions = {
+		naval_overhaul_on_game_started
+	}
+}
+
+on_ship_constructed = {
 	on_actions = {
 		naval_overhaul_on_ship_constructed
 	}
@@ -21,12 +27,35 @@ on_monthly_pulse_country = {
 	}
 }
 
+naval_overhaul_on_game_started = {
+	effect = {
+		set_global_variable = naval_overhaul_active
+		set_global_variable = nte_naval_overhaul_detected
+	}
+}
+
 naval_overhaul_on_ship_constructed = {
 	effect = {
 		if = {
 			limit = {
+				exists = scope:ship
+				scope:ship = {
+					OR = {
+						is_ship_type = ship_type:ship_type_early_ironclad
+						is_ship_type = ship_type:ship_type_modern_ironclad
+						is_ship_type = ship_type:ship_type_pre_dreadnought
+						is_ship_type = ship_type:ship_type_dreadnought
+						is_ship_type = ship_type:ship_type_super_dreadnought
+						is_ship_type = ship_type:ship_type_aircraft_carrier
+					}
+				}
 				NOT = { has_variable = naval_overhaul_boom_cd }
 				NOT = { has_modifier = modifier_naval_construction_boom }
+				NOR = {
+					has_variable = nte_country_holiday_accepted
+					has_variable = nte_global_over_limit_flag
+					has_variable = nte_bilateral_over_limit_flag
+				}
 			}
 			set_variable = {
 				name = naval_overhaul_boom_cd
@@ -56,6 +85,11 @@ naval_overhaul_on_naval_battle_won = {
 
 naval_overhaul_on_monthly_pulse_country = {
 	effect = {
+		if = {
+			limit = { NOT = { has_global_variable = naval_overhaul_active } }
+			set_global_variable = naval_overhaul_active
+			set_global_variable = nte_naval_overhaul_detected
+		}
 		if = {
 			limit = { navy_size >= 300 }
 			if = { limit = { has_modifier = modifier_naval_hegemony_tier_1 } remove_modifier = modifier_naval_hegemony_tier_1 }

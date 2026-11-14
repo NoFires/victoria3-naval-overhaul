@@ -14,13 +14,20 @@ TRY_INJECT:naval_mission_type_protect_supply = {
 
 TRY_INJECT:naval_mission_type_raid_supply = {
 	command_modifier = {
-		ship_visibility_mult = -0.15
+		ship_visibility_mult = -0.05 # Stacks with Vanilla -0.25 -> -0.30 total
 		ship_detection_add = 4
+		ship_supply_efficiency_mult = 0.10
 	}
 }
 
 TRY_INJECT:naval_mission_type_blockade = {
 	command_modifier = {
 		ship_blockade_strength_mult = 0.25
+	}
+}
+
+TRY_INJECT:naval_mission_type_port_bombardment = {
+	command_modifier = {
+		ship_visibility_mult = 0.15
 	}
 }

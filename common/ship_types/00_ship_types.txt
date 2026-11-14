@@ -485,6 +485,7 @@ ship_type_coastal_defense_ship = {
 			utility_mod_patrol_boats
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 		}
         ship_mod_slot_utility_2 = {
 			utility_mod_fire_suppression
@@ -617,6 +618,7 @@ ship_type_modern_ironclad = {
 			utility_mod_patrol_boats
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 		}
         ship_mod_slot_utility_2 = {
 			utility_mod_fire_suppression
@@ -748,6 +750,7 @@ ship_type_pre_dreadnought = {
         ship_mod_slot_utility_1 = {
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -756,6 +759,7 @@ ship_type_pre_dreadnought = {
 			utility_mod_torpedo_nets
 			utility_mod_damage_control
 			utility_mod_reinforced_magazine
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -881,6 +885,7 @@ ship_type_dreadnought = {
         ship_mod_slot_utility_1 = {
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -889,6 +894,7 @@ ship_type_dreadnought = {
 			utility_mod_torpedo_nets
 			utility_mod_damage_control
 			utility_mod_reinforced_magazine
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -1011,6 +1017,7 @@ ship_type_super_dreadnought = {
         ship_mod_slot_utility_1 = {
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -1019,6 +1026,7 @@ ship_type_super_dreadnought = {
 			utility_mod_torpedo_nets
 			utility_mod_damage_control
 			utility_mod_reinforced_magazine
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -1472,6 +1480,7 @@ ship_type_troop_ship = {
         ship_mod_slot_utility_2 = {
 			utility_mod_fire_suppression
 			utility_mod_extended_sick_bay
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_large_carronades
@@ -1592,6 +1601,7 @@ ship_type_protected_cruiser = {
         ship_mod_slot_utility_1 = {
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -1599,6 +1609,7 @@ ship_type_protected_cruiser = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -1718,6 +1729,7 @@ ship_type_armored_cruiser = {
         ship_mod_slot_utility_1 = {
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -1725,6 +1737,7 @@ ship_type_armored_cruiser = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -1843,6 +1856,7 @@ ship_type_light_cruiser = {
         ship_mod_slot_utility_1 = {
 			utility_mod_range_finder
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -1850,6 +1864,7 @@ ship_type_light_cruiser = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -1969,6 +1984,7 @@ ship_type_seaplane_tender = {
 
         ship_mod_slot_utility_1 = {
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -1976,6 +1992,7 @@ ship_type_seaplane_tender = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_reinforced_magazine
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -2095,6 +2112,7 @@ ship_type_aircraft_carrier = {
 
         ship_mod_slot_utility_1 = {
 			utility_mod_fire_control_system
+			utility_mod_searchlights
 			utility_mod_scouting_seaplane
 			utility_mod_fire_control_radar
 		}
@@ -2102,6 +2120,7 @@ ship_type_aircraft_carrier = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_reinforced_magazine
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -2235,12 +2254,12 @@ ship_type_torpedo_boat = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
 			utility_mod_torpedo_tubes
 			utility_mod_minesweeping_gear
-			utility_mod_aa_director
 		}
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
@@ -2358,6 +2377,7 @@ ship_type_torpedo_boat_destroyer = {
         ship_mod_slot_utility_1 = {
 			utility_mod_patrol_boats
 			utility_mod_range_finder
+			utility_mod_searchlights
 			utility_mod_hydrophone_array
 			utility_mod_sonar_suite
 		}
@@ -2365,12 +2385,12 @@ ship_type_torpedo_boat_destroyer = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
 			utility_mod_torpedo_tubes
 			utility_mod_minesweeping_gear
-			utility_mod_aa_director
 		}
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
@@ -2404,31 +2424,31 @@ ship_type_submarine = {
     modifier = {
         ship_power_projection_add = 55
         ship_construction_progress_max_add = 25
-        ship_hit_points_max_add = 850
+        ship_hit_points_max_add = 1100
         ship_crew_max_add = 200
         ship_movement_speed_add = 3
         ship_supply_capacity_add = 20
         ship_hull_damage_add = 65
         ship_crew_damage_add = 30
         ship_armor_add = 10
-        ship_critical_hit_chance_add = 0.25
-        ship_critical_hit_multiplier_add = 1.0
+        ship_critical_hit_chance_add = 0.18
+        ship_critical_hit_multiplier_add = 0.75
         ship_vulnerability_add = 4
         ship_screening_add = 6
-        ship_readiness_gain_add = 28
+        ship_readiness_gain_add = 16
         ship_accuracy_add = 7
         ship_visibility_add = 5
         ship_suffered_accuracy_mult = -0.5
         ship_detection_add = 20
         ship_blockade_strength_add = 25
 
-        ship_battle_against_ship_type_early_ironclad_hull_damage_mult = 3.0
-        ship_battle_against_ship_type_monitor_hull_damage_mult = 3.0
-        ship_battle_against_ship_type_coastal_defense_ship_hull_damage_mult = 3.0
-        ship_battle_against_ship_type_modern_ironclad_hull_damage_mult = 3.0
-        ship_battle_against_ship_type_pre_dreadnought_hull_damage_mult = 3.0
-        ship_battle_against_ship_type_dreadnought_hull_damage_mult = 3.0
-        ship_battle_against_ship_type_super_dreadnought_hull_damage_mult = 3.0
+        ship_battle_against_ship_type_early_ironclad_hull_damage_mult = 2.5
+        ship_battle_against_ship_type_monitor_hull_damage_mult = 2.5
+        ship_battle_against_ship_type_coastal_defense_ship_hull_damage_mult = 2.5
+        ship_battle_against_ship_type_modern_ironclad_hull_damage_mult = 2.5
+        ship_battle_against_ship_type_pre_dreadnought_hull_damage_mult = 2.5
+        ship_battle_against_ship_type_dreadnought_hull_damage_mult = 2.5
+        ship_battle_against_ship_type_super_dreadnought_hull_damage_mult = 2.5
         ship_battle_against_ship_type_submarine_accuracy_mult = 0.5
     }
 
@@ -2485,6 +2505,7 @@ ship_type_submarine = {
         ship_mod_slot_utility_2 = {
 			utility_mod_fire_suppression
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -2607,6 +2628,7 @@ ship_type_destroyer = {
         ship_mod_slot_utility_1 = {
 			utility_mod_patrol_boats
 			utility_mod_range_finder
+			utility_mod_searchlights
 			utility_mod_hydrophone_array
 			utility_mod_sonar_suite
 		}
@@ -2614,6 +2636,7 @@ ship_type_destroyer = {
 			utility_mod_fire_suppression
 			utility_mod_damage_control
 			utility_mod_dazzle_camo
+			utility_mod_camouflage
 		}
         ship_mod_slot_utility_3 = {
 			utility_mod_advanced_explosives
@@ -2674,7 +2697,10 @@ ship_type_supply_ship = {
 
     modifications = {
         ship_mod_slot_hull = {
-            ship_mod_hull_standard
+            ship_mod_supply_ship_hull_light
+        }
+        ship_mod_slot_secondary = {
+            ship_mod_supply_ship_secondary_light
         }
         ship_mod_slot_armor = {
             ship_mod_supply_ship_armor_light
@@ -2683,9 +2709,6 @@ ship_type_supply_ship = {
         }
         ship_mod_slot_guns = {
             ship_mod_supply_ship_guns_light
-        }
-        ship_mod_slot_secondary = {
-            ship_mod_secondary_standard
         }
         ship_mod_slot_propulsion = {
             ship_mod_supply_ship_propulsion_light
@@ -2698,11 +2721,9 @@ ship_type_supply_ship = {
     }
 
     default_modifications = {
-		ship_mod_slot_hull = ship_mod_hull_standard
+		ship_mod_slot_hull = ship_mod_supply_ship_hull_light
+		ship_mod_slot_secondary = ship_mod_supply_ship_secondary_light
 		ship_mod_slot_armor = ship_mod_supply_ship_armor_light
-		ship_mod_slot_guns = ship_mod_supply_ship_guns_light
-		ship_mod_slot_secondary = ship_mod_secondary_standard
 		ship_mod_slot_propulsion = ship_mod_supply_ship_propulsion_light
-		ship_mod_slot_range = ship_mod_supply_ship_range_light
 	}
 }

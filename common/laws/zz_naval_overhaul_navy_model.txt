@@ -9,7 +9,8 @@ TRY_INJECT:law_merchant_navy = {
 TRY_INJECT:law_jeune_ecole = {
 	modifier = {
 		ship_visibility_mult = -0.10
-		character_convoy_raiding_mult = 0.15
+		ship_ship_type_submarine_hull_damage_mult = 0.10
+		ship_movement_speed_mult = 0.05
 	}
 }
 

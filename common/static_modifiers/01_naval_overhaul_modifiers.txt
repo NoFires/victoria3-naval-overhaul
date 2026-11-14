@@ -18,15 +18,10 @@ modifier_naval_hegemony_tier_3 = {
 	country_prestige_from_navy_power_projection_mult = 0.15
 }
 
-naval_overhaul_arms_race_momentum = {
+modifier_naval_arms_race_momentum = {
 	icon = gfx/interface/icons/timed_modifier_icons/modifier_rifle_positive.dds
 	building_shipyard_throughput_add = 0.10
 	country_prestige_from_navy_power_projection_mult = 0.10
-}
-
-naval_overhaul_victory_prestige = {
-	icon = gfx/interface/icons/timed_modifier_icons/modifier_flag_positive.dds
-	country_prestige_mult = 0.05
 }
 
 modifier_naval_arms_race_focus = {

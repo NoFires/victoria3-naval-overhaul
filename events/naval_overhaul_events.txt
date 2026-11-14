@@ -20,6 +20,10 @@ naval_overhaul.1 = {
 	option = {
 		name = naval_overhaul.1.a
 		default_option = yes
+		if = {
+			limit = { has_modifier = modifier_naval_arms_race_momentum }
+			remove_modifier = modifier_naval_arms_race_momentum
+		}
 		add_modifier = {
 			name = modifier_naval_arms_race_focus
 			days = 1095
@@ -28,6 +32,10 @@ naval_overhaul.1 = {
 
 	option = {
 		name = naval_overhaul.1.b
+		if = {
+			limit = { has_modifier = modifier_naval_arms_race_momentum }
+			remove_modifier = modifier_naval_arms_race_momentum
+		}
 		add_modifier = {
 			name = modifier_naval_construction_boom
 			days = 1095
@@ -36,6 +44,10 @@ naval_overhaul.1 = {
 
 	option = {
 		name = naval_overhaul.1.c
+		if = {
+			limit = { has_modifier = modifier_naval_arms_race_momentum }
+			remove_modifier = modifier_naval_arms_race_momentum
+		}
 		add_modifier = {
 			name = modifier_naval_victory_morale
 			days = 1095

@@ -97,6 +97,7 @@ REPLACE:naval_battle_size = {
 
 			multiply = scope:enemy_military_formation.num_ships_not_in_battle
 			multiply = 0.25
+			desc = "NAVAL_BATTLE_SIZE_RECON_ADVANTAGE"
 		}
 	}
 	else_if = {
@@ -118,10 +119,168 @@ REPLACE:naval_battle_size = {
 		value = scope:post_command_limit_base_amount_cap
 		add = scope:enemy_military_formation.num_ships_not_in_battle
 	}
+
+	if = {
+		limit = {
+			exists = scope:military_formation
+			scope:military_formation = { is_fleet = yes }
+		}
+		max = scope:military_formation.num_ships_not_in_battle
+		if = {
+			limit = { exists = scope:own_commander }
+			max = {
+				value = 0
+				scope:own_commander = {
+					add = this.command_limit_num_units
+				}
+				min = define:NMilitary|MILITARY_FORMATION_COMMAND_LIMIT_NO_COMMANDER
+				desc = "[concept_command_limit]"
+			}
+		}
+		else = {
+			max = define:NMilitary|MILITARY_FORMATION_COMMAND_LIMIT_NO_COMMANDER
+		}
+	}
 }
 
-# AI Utility & Hull/Secondary Weight Helpers (calibrated for Vanilla & Kuromi SHIP_DESIGN_UTILITY_MOD_MIN_SCORE = 1.125)
-naval_overhaul_ai_utility_base = {
-	value = 1.2
-	multiply = ship_mod_market_multiplier
+# Tighter market-price sensitivity for ship modifications (rejects inflated steel/artillery/radios modules)
+REPLACE:ship_mod_ai_price_ratio_reject = { value = 1.45 }
+REPLACE:ship_mod_ai_price_ratio_bonus  = { value = 0.85 }
+
+# Budget- & intent-aware scaling for expensive/high-tier Overhaul ship modifications
+ship_mod_budget_high_mult = {
+	value = 1.0
+	if = {
+		limit = { in_default = yes }
+		multiply = 0.15
+	}
+	else_if = {
+		limit = { scaled_debt >= 0.30 }
+		multiply = 0.35
+	}
+	else_if = {
+		limit = { scaled_debt >= 0.15 }
+		multiply = 0.65
+	}
+
+	if = {
+		limit = { military_wage_level = very_low }
+		multiply = 0.25
+	}
+	else_if = {
+		limit = { military_wage_level = low }
+		multiply = 0.55
+	}
+	else_if = {
+		limit = { military_wage_level = high }
+		multiply = 1.20
+	}
+	else_if = {
+		limit = { military_wage_level = very_high }
+		multiply = 1.40
+	}
+
+	if = {
+		limit = { is_at_war = no }
+		multiply = 0.80
+	}
+	else = {
+		multiply = 1.15
+	}
+
+	if = {
+		limit = { country_rank < rank_value:major_power }
+		multiply = 0.55
+	}
+	else_if = {
+		limit = { country_rank < rank_value:great_power }
+		multiply = 0.75
+	}
+
+	if = {
+		limit = {
+			OR = {
+				has_strategy = ai_strategy_armed_isolationism
+				has_strategy = ai_strategy_conservative_agenda
+			}
+		}
+		multiply = 0.75
+	}
+	min = 0.10
+}
+
+# Moderate scaling for mid-tier Overhaul ship modifications
+ship_mod_budget_mid_mult = {
+	value = 1.0
+	if = {
+		limit = { in_default = yes }
+		multiply = 0.45
+	}
+	else_if = {
+		limit = { scaled_debt >= 0.30 }
+		multiply = 0.70
+	}
+
+	if = {
+		limit = { military_wage_level = very_low }
+		multiply = 0.55
+	}
+	else_if = {
+		limit = { military_wage_level = low }
+		multiply = 0.85
+	}
+	else_if = {
+		limit = {
+			OR = {
+				military_wage_level = high
+				military_wage_level = very_high
+			}
+		}
+		multiply = 1.15
+	}
+
+	if = {
+		limit = { is_at_war = yes }
+		multiply = 1.15
+	}
+	min = 0.25
+}
+
+# Cost-conscious scaling favoring economical/standard modules when austerity or low military wages apply
+ship_mod_budget_low_mult = {
+	value = 1.0
+	if = {
+		limit = {
+			OR = {
+				in_default = yes
+				military_wage_level = very_low
+			}
+		}
+		multiply = 1.75
+	}
+	else_if = {
+		limit = {
+			OR = {
+				scaled_debt >= 0.25
+				military_wage_level = low
+			}
+		}
+		multiply = 1.40
+	}
+	else_if = {
+		limit = {
+			military_wage_level = very_high
+			is_at_war = yes
+		}
+		multiply = 0.75
+	}
+
+	if = {
+		limit = { country_rank < rank_value:major_power }
+		multiply = 1.25
+	}
+	if = {
+		limit = { is_at_war = no }
+		multiply = 1.15
+	}
 }

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Review — Iron &amp; Steam: Naval Overhaul</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+      min-width: 0;
+    }
+
+    nav {
+      width: 240px;
+      flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid #e5e5ea;
+      padding: 2rem 1.25rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    nav h2 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8e8e93;
+      margin-bottom: 1rem;
+    }
+
+    nav a {
+      display: block;
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      color: #3a3a3c;
+      text-decoration: none;
+      font-size: 0.82rem;
+      margin-bottom: 0.2rem;
+      transition: background 0.15s;
+    }
+
+    nav a:hover { background: #f2f2f7; }
+
+    main {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 2.5rem 3rem;
+      max-width: 1600px;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e5e5ea;
+    }
+
+    header h1 { font-size: 1.75rem; font-weight: 700; }
+    header p { margin-top: 0.5rem; color: #6e6e73; font-size: 0.95rem; }
+    header .meta { margin-top: 0.75rem; font-size: 0.8rem; color: #8e8e93; }
+
+    section { margin-bottom: 3rem; scroll-margin-top: 2rem; }
+
+    section h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e5ea;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .card p { color: #3a3a3c; font-size: 0.9rem; overflow-wrap: break-word; word-break: break-word; margin-bottom: 0.5rem; }
+    .card p:last-child { margin-bottom: 0; }
+
+    .diagram-card {
+      background: #fff;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      overflow-x: auto;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      min-width: 0;
+    }
+
+    .diagram-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .diagram-desc { color: #6e6e73; font-size: 0.85rem; margin-bottom: 1rem; }
+    .mermaid {
+      min-height: 80px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .findings { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .finding {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.875rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      min-width: 0;
+    }
+
+    .finding.strength { background: #f0faf4; border-left: 3px solid #30d158; }
+    .finding.concern  { background: #fffbf0; border-left: 3px solid #ff9f0a; }
+    .finding.risk     { background: #fff5f5; border-left: 3px solid #ff3b30; }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .finding-text {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .badge-strength { background: #30d158; color: #fff; }
+    .badge-concern  { background: #ff9f0a; color: #fff; }
+    .badge-risk     { background: #ff3b30; color: #fff; }
+
+    .finding-text strong { display: block; margin-bottom: 0.2rem; overflow-wrap: break-word; word-break: break-word; }
+    .finding-text p { color: #3a3a3c; overflow-wrap: break-word; word-break: break-word; }
+    .finding-text * { overflow-wrap: break-word; word-break: break-word; }
+
+    .recommendations ol { padding-left: 1.5rem; }
+    .recommendations li { margin-bottom: 0.75rem; color: #3a3a3c; font-size: 0.9rem; overflow-wrap: break-word; word-break: break-word; }
+    .recommendations li strong { color: #1d1d1f; }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85em;
+      background: #f2f2f7;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 600px) {
+      body { flex-direction: column; }
+      nav {
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+        max-height: 30vh;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #e5e5ea;
+        overflow-x: auto;
+      }
+      nav a { display: inline-block; margin-bottom: 0; margin-right: 0.25rem; }
+      main { padding: 1.5rem 1.25rem; max-width: 100%; }
+      .diagram-card { margin-left: -1.25rem; margin-right: -1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h2>Architecture Review</h2>
+    <a href="#current">Current Architecture</a>
+    <a href="#separation-of-concerns">Separation of Concerns</a>
+    <a href="#cohesion-and-coupling">Cohesion and Coupling</a>
+    <a href="#layered-architecture">Layered Architecture</a>
+    <a href="#hexagonal-architecture-ports-and-adapters">Hexagonal Architecture / Ports and Adapters</a>
+    <a href="#scalability">Scalability</a>
+    <a href="#observability">Observability</a>
+    <a href="#security">Security</a>
+    <a href="#reliability">Reliability</a>
+    <a href="#resilience">Resilience</a>
+    <a href="#data-architecture">Data Architecture</a>
+    <a href="#cost-efficiency-finops">Cost Efficiency (FinOps)</a>
+    <a href="#operability">Operability</a>
+    <a href="#deployment-architecture">Deployment Architecture</a>
+    <a href="#event-architecture">Event Architecture</a>
+    <a href="#ai-architecture">AI Architecture</a>
+    <a href="#multi-tenancy">Multi-Tenancy</a>
+    <a href="#architecture-governance">Architecture Governance</a>
+    <a href="#domain-architecture">Domain Architecture</a>
+    <a href="#api-architecture">API Architecture</a>
+    <a href="#architecture-fitness-metrics">Architecture Fitness Metrics</a>
+    <a href="#common-anti-patterns">Common Anti-Patterns</a>
+    <a href="#testability">Testability</a>
+    <a href="#evolvability">Evolvability</a>
+    <a href="#architectural-smells-codebase-review-only-not-applicable-in-design-review">Architectural Smells</a>
+    <a href="#recommended">Recommended Architecture</a>
+  </nav>
+
+  <main>
+    <header>
+      <h1>Iron &amp; Steam: Naval Overhaul — Architecture Review</h1>
+      <p>Comprehensive architectural review of the Victoria 3 (1.15.1 Ivan-Chai) 10-slot naval warfare overhaul mod, its VFS injection boundaries, GUI bindings, bilingual localization layer, and offline simulation sandbox.</p>
+      <p class="meta">Generated 2026-11-14 · Codebase Review · Target Engine: Victoria 3 1.15.1 (multiplayer_synchronized = true)</p>
+    </header>
+
+    <section id="current">
+      <h2>Current Architecture</h2>
+
+      <div class="card">
+        <p><strong>CodeGraph not available — structural analysis based on file/grep heuristics.</strong></p>
+        <p>The codebase consists of two distinct runtime planes: (1) a <strong>Victoria 3 Clausewitz/Jomini Mod Payload</strong> spanning 17 script, GUI, localization, and metadata files across <code>common/</code>, <code>events/</code>, <code>gui/</code>, <code>localization/</code>, and <code>.metadata/</code>; and (2) an <strong>Offline Python Verification &amp; Combat Sandbox</strong> (<code>sim_overhaul.py</code>) that reads Vanilla 1.15.1, companion mods (Kuromi AI, Naval Treaty Expanded), and this mod directly from disk to validate VFS merging, UTF-8 BOM encoding, localization coverage, tech-tree closure, AI ship designer picks, and 6-step naval combat balance.</p>
+        <p>Note: During this review engagement, critical engine-level defects discovered across subsystems B–F were also remediated and verified via <code>python -B sim_overhaul.py --assert-mode</code>. The current-state diagrams and criteria sections below document the baseline findings uncovered in the audit alongside the architectural posture and remaining strategic improvements.</p>
+      </div>
+
+      <div class="diagram-card">
+        <h3>1. System Context Diagram</h3>
+        <p class="diagram-desc">System boundary showing human players, mod contributors, the Victoria 3 1.15.1 runtime, companion mods, the offline simulator, and Steam Workshop distribution.</p>
+        <div class="mermaid">
+graph TB
+  Player["Player &amp; MP Peers\n(Victoria 3 1.15.1)"] -->|'loads mod via VFS'| V3Engine["Victoria 3 Engine\n(Clausewitz / Jomini)"]
+  Maintainer["Mod Maintainer &\nContributors"] -->|'edits scripts &amp; runs'| Sandbox["Offline Simulator\n(sim_overhaul.py)"]
+  Maintainer -->|'commits source'| ModRepo["Iron &amp; Steam: Naval Overhaul\n(Mod Codebase)"]
+  ModRepo -->|'selective NTFS junctions'| V3Engine
+  Vanilla["Victoria 3 Vanilla 1.15.1\n(/game/common &amp; gui)"] -->|'base VFS definitions'| V3Engine
+  Vanilla -->|'read-only parse'| Sandbox
+  CompMods["Companion Mods\n(Kuromi AI / NTE)"] -->|'co-loaded in playset'| V3Engine
+  CompMods -->|'optional read-only parse'| Sandbox
+  ModRepo -->|'read-only parse &amp; assert'| Sandbox
+  V3Engine -->|'uploads packed payload'| Workshop["Steam Workshop\n(multiplayer_synchronized)"]
+        </div>
+      </div>
+
+      <div class="diagram-card">
+        <h3>2. Component Diagram (Audited Baseline)</h3>
+        <p class="diagram-desc">Internal mod modules, VFS override relationships, GUI bindings, and the monolithic Python validation script as discovered during the audit.</p>
+        <div class="mermaid">
+graph LR
+  subgraph sg-mod-core["Mod Runtime Payload"]
+    Defines["01_naval_overhaul_defines.txt\n(NMilitary / NEconomy)"]
+    Slots["00_ship_modification_slots.txt\n(10 Slots Full Override)"]
+    ShipTypes["00_ship_types.txt\n(22 Ships Full Override, 2708 LOC)"]
+    HullMods["02_hull_and_secondary_modifications.txt\n(9 Custom Core Mods)"]
+    UtilMods["03_overhaul_utility_modifications.txt\n(13 Custom Utility Mods)"]
+    ScriptVals["zz_naval_overhaul_script_values.txt\n(REPLACE:naval_battle_size)"]
+    AIStrat["zz_naval_overhaul_strategy.txt\n(INJECT:ai_strategy_default)"]
+    Laws["zz_naval_overhaul_navy_model.txt\n(TRY_INJECT:law_*)"]
+    Missions["zz_naval_overhaul_missions.txt\n(TRY_INJECT:naval_mission_type_*)"]
+    Vet["00_ship_veterancy_levels.txt\n(4 Tiers Full Override)"]
+    StaticMods["01_naval_overhaul_modifiers.txt\n(Timed &amp; Hegemony Modifiers)"]
+    OnActions["01_naval_overhaul_on_actions.txt\n(Ship/Battle/Monthly Pulses)"]
+    JE["01_naval_arms_race_je.txt\n(Arms Race Journal Entry)"]
+    Events["naval_overhaul_events.txt\n(naval_overhaul.1 &amp; .2)"]
+    GUI["ship_designer_popup.gui\n(10-Slot Layout Override)"]
+    Loc["naval_overhaul_l_*.yml\n(EN &amp; ZH Localization)"]
+  end
+
+  subgraph sg-tooling["Offline Verification &amp; Docs"]
+    Sim["sim_overhaul.py\n(Monolithic Lexer/VFS/Sim/Audit)"]
+    Docs["AGENTS.md / plan.md / README.md"]
+  end
+
+  ShipTypes -->|'references slots'| Slots
+  ShipTypes -->|'pools &amp; defaults'| HullMods
+  ShipTypes -->|'pools &amp; defaults'| UtilMods
+  GUI -->|'binds static ShipType vs Template'| ShipTypes
+  GUI -->|'renders slot icons'| Slots
+  OnActions -->|'grants'| StaticMods
+  JE -->|'grants &amp; triggers'| StaticMods
+  JE -->|'fires'| Events
+  Events -->|'grants'| StaticMods
+  StaticMods -->|'missing loc keys'| Loc
+  Sim -->|'parses &amp; simulates'| sg-mod-core
+        </div>
+      </div>
+
+      <div class="diagram-card">
+        <h3>3. VFS Override &amp; Sandbox Data-Flow Diagram (Audited Baseline Divergence)</h3>
+        <p class="diagram-desc">Comparison of Victoria 3 1.15.1 runtime VFS merging semantics versus the baseline discrepancies uncovered in sim_overhaul.py.</p>
+        <div class="mermaid">
+graph LR
+  VanillaData["Vanilla 1.15.1 Scripts\n(00_defines, 00_ship_types, 00_default_strategy)"] -->|'ASCII load order'| V3VFS["V3 Runtime VFS Merger"]
+  ModOverlays["Mod INJECT / TRY_INJECT / REPLACE\n(zz_* files)"] -->|'additive &amp; key-level patch'| V3VFS
+  ModFull["Mod Full Overrides\n(00_ship_types, 00_ship_modification_slots)"] -->|'shadows entire vanilla file'| V3VFS
+  V3VFS -->|'flat armor sub &amp; level^1.028 cost'| RealSim["Real V3 1.15.1 Engine Behavior"]
+
+  VanillaData -->|'hardcoded Windows paths'| PyParser["Baseline sim_overhaul.py\n(No global vars, overwrite deep_inject)"]
+  ModOverlays --> PyParser
+  ModFull --> PyParser
+  PyParser -->|'reads nonexistent cost=0.0'| BrokenAI["Broken AI Budget Check\n(Always 0.0 / Unlimited)"]
+  PyParser -->|'armor/(armor+150), no damage mults'| BrokenCombat["Divergent 6-Step Combat Sim\n(Masked Submarine Over-Tuning)"]
+        </div>
+      </div>
+
+      <div class="diagram-card">
+        <h3>4. Naval Battle &amp; Event Pulse Sequence Diagram (Audited Baseline Defects)</h3>
+        <p class="diagram-desc">Runtime execution sequence of battle sizing, 6-step naval combat, and arms-race journal/event modifier stacking defects.</p>
+        <div class="mermaid">
+sequenceDiagram
+  participant Fleet as Player/AI Fleet
+  participant SV as naval_battle_size
+  participant Combat as 6-Step Battle Loop
+  participant OnAct as on_actions
+  participant JE as je_naval_arms_race
+  participant Ev as naval_overhaul.1
+
+  Fleet->>SV: Compute engagement width
+  SV-->>Fleet: Adds recon term atop 50% cap without final fleet/cmd ceiling
+  Fleet->>Combat: Enter battle (n_a vs n_b)
+  Combat->>Combat: Readiness gain -> Target screen/vuln -> Hit/Crit -> Flat Armor Sub
+  OnAct->>Fleet: on_ship_constructed fires even on cheap supply_ship
+  JE->>Fleet: Activates at dreadnought_tech + navy>=40
+  JE-->>Fleet: Applies unlocalized naval_overhaul_arms_race_momentum (+10%)
+  alt Fleet already >= 80 ships
+    JE->>Ev: Immediately completes and pops naval_overhaul.1
+    Ev-->>Fleet: Stacks modifier_naval_arms_race_focus (+10% total +20% throughput)
+  else Country loses all coastal states
+    JE-->>Fleet: No invalid_outcome cleanup path
+  end
+        </div>
+      </div>
+
+      <div class="diagram-card">
+        <h3>5. Deployment &amp; NTFS Junction Topology</h3>
+        <p class="diagram-desc">Selective filesystem linking separating development tools from the Victoria 3 launcher and Steam Workshop upload root.</p>
+        <div class="mermaid">
+graph TB
+  subgraph sg-dev["Dev Repository on E: Drive"]
+    RepoRoot["E:/Code/V3-Navy-Mod/Iron &amp; Steam Naval Overhaul"]
+    PayloadDirs[".metadata, common, events, gui, localization, thumbnail.png"]
+    DevFiles["sim_overhaul.py, AGENTS.md, plan.md, docs/architecture/review/"]
+    RootThumb["Duplicate thumbnail.png at Root"]
+  end
+
+  subgraph sg-doc["Windows Documents Mod Staging"]
+    GameModDir["C:/Users/.../Victoria 3/mod/Naval Overhaul"]
+    Junctions["5 NTFS Directory Junctions +\n1 SymbolicLink"]
+  end
+
+  RepoRoot --> PayloadDirs
+  RepoRoot --> DevFiles
+  RepoRoot --> RootThumb
+  PayloadDirs -->|'mapped selectively'| Junctions
+  Junctions --> GameModDir
+  GameModDir -->|'loaded by launcher'| V3Client["Victoria 3 Game Client"]
+  GameModDir -->|'published with id empty'| SteamCloud["Steam Workshop Package"]
+        </div>
+      </div>
+    </section>
+
+    <section id="separation-of-concerns">
+      <h2>Separation of Concerns</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Clean Physical Separation Between Mod Payload and Dev Tooling</strong>
+            <p>Game-loaded Clausewitz assets (<code>common/</code>, <code>events/</code>, <code>gui/</code>, <code>localization/</code>, <code>.metadata/</code>) are cleanly isolated from Python simulation tooling (<code>sim_overhaul.py</code>) and documentation (<code>AGENTS.md</code>, <code>plan.md</code>, <code>docs/</code>) via selective NTFS junctions, preventing developer artifacts from leaking into Steam Workshop uploads.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Supply Ship Non-Combat Logistics Mixed With Armed Combat Slots</strong>
+            <p>In the audited baseline of <code>common/ship_types/00_ship_types.txt:2675-2707</code>, <code>ship_type_supply_ship</code> had been assigned <code>ship_mod_slot_hull</code> and <code>ship_mod_slot_secondary</code> (<code>ship_mod_secondary_standard</code>), injecting artillery goods consumption and combat firepower/screening into pure logistics vessels. (Remediated by restoring Vanilla's 4 unarmed logistics slots.)</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Monolithic Responsibilities Inside sim_overhaul.py</strong>
+            <p><code>sim_overhaul.py</code> (877 LOC baseline) mixes Clausewitz lexical parsing, VFS overlay resolution, 6-step naval combat physics, economic/tonnage calculation, AI designer heuristics, and regression assertion reporting in a single script file without module boundaries.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cohesion-and-coupling">
+      <h2>Cohesion and Coupling</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Cohesive 4-Pole Tactical Partitioning Across Utility Slots</strong>
+            <p>Utility modifications in <code>03_overhaul_utility_modifications.txt</code> and <code>00_ship_types.txt</code> are strictly partitioned across <code>utility_1</code> (sensors/fire control), <code>utility_2</code> (survivability/stealth), <code>utility_3</code> (special armament/AA/minesweeping), and <code>utility_4</code> (endurance/landing ops), eliminating multi-slot self-stacking exploits across all 22 ship types.</p>
+          </div>
+        </div>
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Full-File Shadowing Coupling in 00_ship_types.txt and 00_ship_modification_slots.txt</strong>
+            <p><code>common/ship_types/00_ship_types.txt</code> (2,708 lines) and <code>common/ship_modification_slots/00_ship_modification_slots.txt</code> replace entire Vanilla files. Any Victoria 3 patch (e.g., 1.15.x hotfixes) or companion mod modifying Vanilla ship types in the same file faces load-order shadowing unless converted to <code>INJECT:</code> / <code>REPLACE:</code> per-ship directives or paired with an explicit compatibility patch.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Tight Coupling Between GUI Template Context and ShipType vs. ShipTemplate</strong>
+            <p>In <code>gui/ship_designer_popup.gui:894</code>, the baseline bound the anti-ship modifier block to static <code>[ShipType.GetModifier]</code> rather than <code>[ShipTemplate.GetModifier]</code>, decoupling modification-granted accuracy bonuses (ASW depth charges, sonar, torpedo defense) from live UI feedback. (Remediated to <code>[ShipTemplate.GetModifier]</code>.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="layered-architecture">
+      <h2>Layered Architecture</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Clear Script Layering via Jomini Prefix Conventions</strong>
+            <p>Overlay files consistently use <code>zz_</code> ASCII filename prefixes (<code>zz_naval_overhaul_script_values.txt</code>, <code>zz_naval_overhaul_strategy.txt</code>, <code>zz_naval_overhaul_navy_model.txt</code>, <code>zz_naval_overhaul_missions.txt</code>) so patches apply deterministically after Vanilla and companion mods such as Kuromi AI.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Presentation-Layer Duplicate Texture &amp; Localization Leakage</strong>
+            <p>In the baseline, <code>00_ship_modification_slots.txt</code> assigned the identical <code>supplies_navy.dds</code> icon to five separate slots (<code>range</code> and <code>utility_1..4</code>) and duplicated <code>armor_navy.dds</code> and <code>average_damage_navy.dds</code>, weakening visual hierarchy in the GUI layer. (Remediated with 10 distinct verified Vanilla icons.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="hexagonal-architecture-ports-and-adapters">
+      <h2>Hexagonal Architecture / Ports and Adapters</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Non-Destructive TRY_INJECT Adapters for Companion Mods</strong>
+            <p>Laws (<code>zz_naval_overhaul_navy_model.txt</code>) and naval missions (<code>zz_naval_overhaul_missions.txt</code>) interact with Vanilla and external political/naval mods through <code>TRY_INJECT:</code> adapters, degrading gracefully if another overhaul renames or removes a target law without throwing VFS errors.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Hardcoded Developer Filesystem Paths in sim_overhaul.py Adapter</strong>
+            <p>Baseline <code>sim_overhaul.py:20-23</code> hardcoded <code>C:\Users\RedAndBlack\...</code> and Steam workshop IDs with no CLI flags or environment variable fallback, preventing external contributors from running the simulator without editing source code. (Remediated with <code>--vanilla-dir</code>, <code>--kuromi-dir</code>, <code>--nte-dir</code>, and <code>V3_*_DIR</code> environment variables.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scalability">
+      <h2>Scalability</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Bounded Monthly Country Pulse &amp; Cooldown-Gated Construction Hooks</strong>
+            <p><code>common/on_actions/01_naval_overhaul_on_actions.txt</code> avoids expensive global ship iteration by checking aggregate <code>navy_size</code> thresholds and gating <code>on_ship_constructed</code> with a 365-day country variable cooldown.</p>
+          </div>
+        </div>
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Unbounded naval_battle_size Addition &amp; GUI 2-Row Core Slot Cap</strong>
+            <p>Baseline <code>REPLACE:naval_battle_size</code> added the detection/visibility ratio term directly onto <code>post_command_limit_base_amount_cap</code> without clamping the final sum against <code>num_ships_not_in_battle</code> or the admiral's <code>command_limit_num_units</code>. Additionally, <code>gui/ship_designer_popup.gui:100-105</code> capped expanded core slots at 2 rows (<code>148px</code>), overflowing if any slot exceeds 6 options. (Both remediated.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="observability">
+      <h2>Observability</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Guaranteed error.log Missing Localization &amp; Blank Tooltip Breakdowns</strong>
+            <p>The audited baseline referenced <code>naval_overhaul_arms_race_momentum</code> in <code>01_naval_arms_race_je.txt:26</code> without defining it in either English or Chinese localization, omitted a <code>desc</code> breakdown key in <code>zz_naval_overhaul_script_values.txt:72-100</code>, and duplicated <code>utility_mod_scouting_seaplane</code> on lines 52 and 77 of both YAML files. (All remediated and enforced in <code>--assert-mode</code>.)</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>No Automated Victoria 3 error.log Ingestion in Tooling</strong>
+            <p><code>sim_overhaul.py</code> audits static files offline but does not provide an optional parser for <code>Documents/Paradox Interactive/Victoria 3/logs/error.log</code> after live game launches to correlate runtime engine warnings with mod keys.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="security">
+      <h2>Security</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Zero-Dependency Stdlib Tooling &amp; Sandbox-Safe Offline Execution</strong>
+            <p><code>sim_overhaul.py</code> relies exclusively on Python 3 standard library modules with read-only file parsing and no network I/O, shell execution, or dynamic <code>eval</code>/<code>exec</code>, eliminating supply-chain and code-injection risks for contributors.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reliability">
+      <h2>Reliability</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Silently Ignored Legacy Modifier &amp; Dropped Vanilla Utility Modules</strong>
+            <p><code>zz_naval_overhaul_navy_model.txt:12</code> injected <code>character_convoy_raiding_mult = 0.15</code>—a legacy character-scoped modifier unused anywhere in Victoria 3 1.15.1—into <code>law_jeune_ecole</code>. Simultaneously, <code>00_ship_types.txt</code> completely omitted Vanilla's <code>utility_mod_searchlights</code> (the sole counter to night/weather accuracy penalties) and <code>utility_mod_camouflage</code> from all 22 ships. (Both remediated.)</p>
+          </div>
+        </div>
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Missing Journal Entry Invalidation Exit &amp; Re-Entry Guard</strong>
+            <p><code>je_naval_arms_race</code> lacked both a <code>naval_arms_race_completed</code> re-entry guard and an <code>invalid_outcome</code> exit when a nation loses all coastal states, risking stuck journal entries and duplicated 5-year shipyard throughput modifiers. (Remediated.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resilience">
+      <h2>Resilience</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Defensive Guardrails Against Missing Scopes &amp; Companion Mods</strong>
+            <p><code>zz_naval_overhaul_script_values.txt</code> explicitly guards <code>exists = scope:military_formation</code>, <code>exists = scope:enemy_military_formation</code>, and <code>exists = scope:own_commander</code>, clamping detection/visibility ratios to <code>[0.35, 2.5]</code> and denominators to <code>min = 1</code> to prevent division-by-zero or runaway battle sizes.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Early-Game Economic Shock From Armed Supply Ship Defaults</strong>
+            <p>Adding <code>ship_mod_secondary_standard</code> (10 artillery input) to <code>ship_type_supply_ship</code> created immediate artillery shortages in 1836 for nations lacking arms industries. Restoring Vanilla's unarmed 4-slot supply ship structure eliminates this systemic fragility.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="data-architecture">
+      <h2>Data Architecture</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Ten Misleading Localization Descriptions Diverging From Script Source of Truth</strong>
+            <p>Ten modification <code>_desc</code> entries in both English and Simplified Chinese YAML contradicted the actual <code>modifier</code> blocks (e.g., claiming supply cost reduction where only supply capacity increased, claiming crit/accuracy/hull-damage bonuses that did not exist, or citing convoy raiding on hydrophones). Furthermore, orphan key <code>ship_mod_secondary_heavy_casemate</code> remained in localization with no script definition. (All remediated.)</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Inconsistent Static Modifier Naming Convention &amp; Dead Keys</strong>
+            <p><code>01_naval_overhaul_modifiers.txt</code> mixed <code>modifier_naval_*</code> and <code>naval_overhaul_*</code> prefixes and retained an unreferenced, unlocalized <code>naval_overhaul_victory_prestige</code> entry. (Normalized to <code>modifier_naval_*</code> and pruned dead entry.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cost-efficiency-finops">
+      <h2>Cost Efficiency (FinOps)</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Severe Industrial Goods Underpricing of Custom Utility Modules</strong>
+            <p>Vanilla utility modules in <code>01_utility_modifications.txt</code> cost 105–375 total construction goods units (which directly drive shipyard maintenance and AI <code>ship_mod_market_multiplier</code>). Baseline <code>03_overhaul_utility_modifications.txt</code> priced superior late-game modules 5x–8x cheaper (e.g., 20 radios vs. Vanilla's 130), undermining the mod's core "no free max-out" trade-off constraint. (Recalibrated to 85–140 goods units.)</p>
+          </div>
+        </div>
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Calibrated Modification Level Cost Exponent (1.028)</strong>
+            <p>Reducing <code>SHIP_CONSTRUCTION_COST_MODIFICATION_LEVEL_FACTOR</code> from <code>1.05</code> (Vanilla 4-slot baseline: <code>1.05^8 = 1.477</code>) to <code>1.028</code> (10-slot baseline: <code>1.028^14 = 1.472</code>) preserves Vanilla ship construction cost curves without exponential build-time inflation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="operability">
+      <h2>Operability</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Zero-Dependency Single-Command Regression Gate</strong>
+            <p>Contributors can run <code>python -B sim_overhaul.py --assert-mode</code> with no virtual environment or external packages to audit VFS conflicts, BOM compliance, localization symmetry, tech-tree validity, and combat balance.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Stale Documentation Referencing Retired Tooling</strong>
+            <p><code>AGENTS.md:21-22</code> referenced nonexistent files (<code>app.py</code>, <code>v3_naval_sandbox.py</code>, <code>data.py</code>, <code>*.json</code>), and <code>plan.md</code> contained conflicting define numbers and outdated Phase 4.5 to-do claims. (Synchronized with actual codebase.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="deployment-architecture">
+      <h2>Deployment Architecture</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Selective Junction Mapping &amp; Multiplayer Sync Enforcement</strong>
+            <p>Only runtime directories (<code>.metadata</code>, <code>common</code>, <code>events</code>, <code>gui</code>, <code>localization</code>) and <code>thumbnail.png</code> are linked to the Victoria 3 staging directory, while <code>.metadata/metadata.json</code> maintains <code>multiplayer_synchronized = true</code> and all scripts avoid non-deterministic UI/local state branches.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Empty Workshop ID &amp; Duplicate Thumbnail Asset</strong>
+            <p><code>.metadata/metadata.json:3</code> has <code>"id": ""</code> (pending initial Steam Workshop publish), and <code>thumbnail.png</code> is duplicated at both repository root and <code>.metadata/thumbnail.png</code>; additionally, no automated CI workflow validates PRs on GitHub without a local Windows Victoria 3 installation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="event-architecture">
+      <h2>Event Architecture</h2>
+      <div class="findings">
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Over-Broad on_ship_constructed Trigger &amp; Double-Stacked Arms Race Buff</strong>
+            <p><code>on_ship_constructed</code> fired <code>modifier_naval_construction_boom</code> on any constructed hull (including supply ships and torpedo boats), and completing <code>je_naval_arms_race</code> stacked <code>naval_overhaul_arms_race_momentum</code> (+10% shipyard throughput) with <code>modifier_naval_arms_race_focus</code> (+10%) for +20% total. (Restricted construction boom to capital ships/carriers and cleared momentum upon event resolution.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-architecture">
+      <h2>AI Architecture</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>AI Complexity Injection Overwrite &amp; Blindness in Simulator Budget Model</strong>
+            <p><code>zz_naval_overhaul_strategy.txt</code> duplicated Vanilla's <code>value = 20</code> and law blocks instead of cleanly adding <code>+12</code> onto Vanilla/Kuromi's <code>10</code> baseline, omitting <code>law_diplomatic_navy</code>. Worse, <code>sim_overhaul.py:340,640</code> read a nonexistent <code>cost</code> field (always <code>0.0</code>), completely disabling complexity budget enforcement in offline AI validation. (Remediated to additive <code>add = 12</code> in script and ordinal modification-level budgeting in <code>sim_overhaul.py</code>.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="multi-tenancy">
+      <h2>Multi-Tenancy</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">No material findings</span>
+          <div class="finding-text">
+            <strong>No material findings</strong>
+            <p>Single-player and synchronized multiplayer sessions share deterministic Victoria 3 country/formation scopes with no cross-tenant data storage or shared mutable backend state.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture-governance">
+      <h2>Architecture Governance</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Explicit Design Constitution in AGENTS.md</strong>
+            <p><code>AGENTS.md</code> clearly codifies "reverse-engineer Vanilla first", minimal GUI override, 10-slot taxonomy, PVP default blueprints, AI complexity parity, and bilingual localization invariants.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Architectural Drift Between plan.md Spec and Implemented Defines</strong>
+            <p>Several parameters in <code>plan.md</code> (blockade merchant marine <code>4</code> vs. implemented <code>5</code>; bombardment devastation <code>50.0</code> vs. <code>35.0</code>; unimplemented Phase 3 shipyard PMs and battle conditions) drifted out of sync with the actual files, obscuring what was intentionally tuned vs. incomplete. (Reconciled in <code>plan.md</code>.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="domain-architecture">
+      <h2>Domain Architecture</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Asymmetric Counter Gap Against Torpedo Boat Destroyers &amp; Era Mismatch</strong>
+            <p><code>ship_mod_secondary_torpedo_defense</code> and <code>ship_mod_secondary_heavy_aa</code> targeted <code>torpedo_boat</code> and <code>destroyer</code> while omitting <code>torpedo_boat_destroyer</code>—leaving a blind spot despite capital ships carrying a <code>-0.5/-0.66</code> penalty against it. Conversely, <code>utility_mod_aa_director</code> was available on 1870s torpedo boats despite its WWII anti-aircraft role. (Remediated in both script files.)</p>
+          </div>
+        </div>
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>Submarine Firing Rate &amp; Anti-Capital Multiplier Masked by Broken Simulator Math</strong>
+            <p>When evaluated under Victoria 3 1.15.1's true flat armor subtraction (<code>concept_ship_armor_desc</code>) and damage-reduction modifiers, baseline <code>ship_type_submarine</code> (<code>readiness_gain = 28</code>, <code>3.0x</code> vs capital, <code>crit_mult = +1.0</code>) overwhelmed even screened <code>3 DN + 6 Sonar DD</code> fleets (<code>0.65</code> exchange ratio). Re-tuning submarine stats (<code>hp = 1100</code>, <code>readiness_gain = 16</code>, <code>crit = 0.18 / +0.75</code>, <code>2.5x</code> vs capital) restored the 4-pole counter loop (unscreened <code>0.22</code> → screened <code>4.45</code>).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="api-architecture">
+      <h2>API Architecture</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Engine Modifier Contract Alignment</strong>
+            <p>All modifier keys across <code>common/</code> are validated against Victoria 3 1.15.1's <code>common/modifier_type_definitions/*.txt</code> contract, and <code>zz_naval_overhaul_missions.txt</code> coordinates additively with Vanilla's base <code>ship_visibility_mult = -0.25</code> on convoy raiding.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Missing clicksound Contract on Custom Core Modifications</strong>
+            <p>All custom modifications in <code>02_hull_and_secondary_modifications.txt</code> omitted Vanilla's <code>clicksound</code> attribute required by <code>ship_designer_popup.gui:1082</code> (<code>[ShipModificationType.GetClickSound]</code>). (Added Vanilla Designer SFX paths to all custom modifications.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture-fitness-metrics">
+      <h2>Architecture Fitness Metrics</h2>
+      <div class="findings">
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Automated Regression Gate in sim_overhaul.py --assert-mode</strong>
+            <p>The upgraded fitness suite enforces zero VFS merge warnings, zero full-file conflict paths, 100% UTF-8 BOM compliance across <code>.txt/.yml/.gui</code>, Vanilla 1.15.1 modifier contract verification, zero utility stacking across all 22 ships, tech-tree closure for all defaults, 100% bilingual YAML key symmetry/completeness, AI complexity budget adherence, and 6-step combat exchange thresholds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="common-anti-patterns">
+      <h2>Common Anti-Patterns</h2>
+      <div class="findings">
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Dead Code &amp; Phantom Define References</strong>
+            <p>Baseline code contained unused artifacts including <code>naval_overhaul_ai_utility_base</code> in <code>zz_naval_overhaul_script_values.txt:124-127</code>, <code>naval_overhaul_victory_prestige</code> in <code>01_naval_overhaul_modifiers.txt:27-30</code>, <code>ship_mod_secondary_heavy_casemate</code> in localization, and nonexistent defines (<code>NAVAL_ARMOR_MITIGATION_DIVISOR</code>, <code>BLOCKADE_SUPPLY_NETWORK_IMPACT_SCALING</code>) in <code>sim_overhaul.py</code>. (All removed.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testability">
+      <h2>Testability</h2>
+      <div class="findings">
+        <div class="finding risk">
+          <span class="badge badge-risk">Risk</span>
+          <div class="finding-text">
+            <strong>High-Fidelity Gap in Baseline Simulator Combat &amp; VFS Models</strong>
+            <p>Baseline <code>sim_overhaul.py</code> diverged from Victoria 3 1.15.1 on four critical axes: (1) hyperbolic armor mitigation instead of flat subtraction + zero-damage bounce withdrawal; (2) ignoring <code>ship_suffered_hull_damage_mult</code>, <code>ship_suffered_crew_damage_mult</code>, and <code>ship_suffered_crit_chance_mult</code>; (3) computing <code>accuracy / 100.0</code>; and (4) evaluating <code>cost = 0.0</code> instead of modification levels. (All four corrected in <code>sim_overhaul.py</code>, though unit tests for the parser itself remain absent.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="evolvability">
+      <h2>Evolvability</h2>
+      <div class="findings">
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Maintenance Burden of Full 00_ship_types.txt Override</strong>
+            <p>Modifying or adding ships in future Victoria 3 patches requires manually diffing 2,708 lines in <code>00_ship_types.txt</code> rather than maintaining targeted per-ship <code>INJECT:</code> / <code>REPLACE:</code> blocks or a generated compatibility patch for Naval Treaty Expanded.</p>
+          </div>
+        </div>
+        <div class="finding strength">
+          <span class="badge badge-strength">Strength</span>
+          <div class="finding-text">
+            <strong>Modular Overlay Strategy for Future Phase 3 Features</strong>
+            <p>Keeping defines, laws, missions, AI strategies, and events in cleanly prefixed mod files makes Phase 3 extensions (Port/Shipyard PM rebalancing, Naval Battle Conditions) straightforward to layer in without rewriting existing mechanics.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="architectural-smells-codebase-review-only-not-applicable-in-design-review">
+      <h2>Architectural Smells (codebase review only — not applicable in design review)</h2>
+      <div class="findings">
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>God Script (sim_overhaul.py) &amp; Copy-Paste Duplication in 00_ship_types.txt</strong>
+            <p><code>sim_overhaul.py</code> combines lexing, VFS merging, physics simulation, AI heuristics, and audit assertions in one ~700-line module; meanwhile <code>00_ship_types.txt</code> repeats near-identical utility slot lists across 21 combat hulls without a generator or structured patch template.</p>
+          </div>
+        </div>
+        <div class="finding concern">
+          <span class="badge badge-concern">Concern</span>
+          <div class="finding-text">
+            <strong>Duplicate Binary Asset (thumbnail.png)</strong>
+            <p>Identical thumbnail files exist at both <code>thumbnail.png</code> and <code>.metadata/thumbnail.png</code>, creating unnecessary drift risk when branding updates are made.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="recommended">
+      <h2>Recommended Architecture</h2>
+
+      <div class="diagram-card">
+        <h3>Revised Component Diagram (Target Architecture)</h3>
+        <p class="diagram-desc">Shows completed P0/P1 remediations (template-bound GUI, aligned localization, unarmed supply ship, additive AI complexity, recalibrated simulator) plus recommended modularization of tooling and compatch boundaries.</p>
+        <div class="mermaid">
+graph LR
+  subgraph sg-mod-clean["Hardened Mod Payload (100% BOM &amp; 1.15.1 Contract Verified)"]
+    Defines2["01_naval_overhaul_defines.txt\n(Tuned Scaling + 1.028 Exp)"]
+    Slots2["00_ship_modification_slots.txt\n(10 Distinct Verified Icons)"]
+    ShipTypes2["00_ship_types.txt\n(Searchlights/Camo Restored,\nSupply Ship 4-Slot Unarmed)"]
+    Mods2["02_hull_and_secondary + 03_overhaul_utility\n(Parity Goods Cost + Clicksounds + TBD Fix)"]
+    Overlays2["zz_* Overlays\n(Additive AI +12, Valid 1.15.1 Modifiers,\nBounded naval_battle_size + Desc)"]
+    EventsJE2["JE + Events + OnActions\n(One-Shot Guard, Invalid Exit, Capital-Only Boom)"]
+    GUI2["ship_designer_popup.gui\n(ShipTemplate.GetModifier + 3-Row Auto Height)"]
+    Loc2["naval_overhaul_l_*.yml\n(100% Symmetric, Zero Dupes, Accurate Descs)"]
+  end
+
+  subgraph sg-tooling-modular["Recommended Modular Tooling &amp; CI"]
+    VfsLib["vfs_parser.py\n(Clausewitz + Global Vars + Unit Tests)"]
+    SimLib["combat_sim.py\n(True Flat Armor + Suffered Mults)"]
+    AuditCLI["sim_overhaul.py --assert-mode\n(CLI Flags + Mod Contract Gate)"]
+    Compatch["Optional NTE Compatch\n(Arms Race x Naval Treaty Sync)"]
+  end
+
+  ShipTypes2 --> Slots2
+  ShipTypes2 --> Mods2
+  GUI2 -->|'live template modifier'| ShipTypes2
+  EventsJE2 --> Loc2
+  Overlays2 --> Loc2
+  AuditCLI --> VfsLib
+  AuditCLI --> SimLib
+  VfsLib -->|'validates'| sg-mod-clean
+        </div>
+      </div>
+
+      <div class="diagram-card">
+        <h3>Revised Naval Battle &amp; Event Pulse Sequence</h3>
+        <p class="diagram-desc">Target execution flow with bounded battle sizing, capital-only construction boom, invalidation cleanup, and non-stacking arms-race modifier transition.</p>
+        <div class="mermaid">
+sequenceDiagram
+  participant Fleet as Player/AI Fleet
+  participant SV as naval_battle_size
+  participant Combat as 6-Step Battle Loop
+  participant OnAct as on_actions
+  participant JE as je_naval_arms_race
+  participant Ev as naval_overhaul.1
+
+  Fleet->>SV: Compute engagement width
+  SV-->>Fleet: Clamp(base_cap + recon_add, 1, min fleet &amp; cmd_limit)
+  Fleet->>Combat: Enter battle (n_a vs n_b)
+  Combat->>Combat: Flat armor sub + suffered mults + 0-dmg bounce desire
+  OnAct->>Fleet: on_ship_constructed checks Capital Ship / Carrier filter
+  JE->>Fleet: Activates once (NOT naval_arms_race_completed)
+  JE-->>Fleet: Applies localized modifier_naval_arms_race_momentum
+  alt Fleet reaches >= 80 ships
+    JE->>Ev: Sets naval_arms_race_completed &amp; triggers naval_overhaul.1
+    Ev->>Fleet: Removes momentum, then applies chosen 1095d doctrine focus
+  else Country loses all coastal states
+    JE-->>Fleet: invalid_outcome removes modifier_naval_arms_race_momentum
+  end
+        </div>
+      </div>
+
+      <div class="card recommendations">
+        <h3>Actionable Recommendations (Prioritized)</h3>
+        <ol>
+          <li><strong>[P0 — Completed in Review] Align Engine Contracts, GUI Contexts &amp; Localization Truth</strong> — Fixed <code>law_jeune_ecole</code> dead modifier, restored <code>utility_mod_searchlights</code> and <code>utility_mod_camouflage</code>, removed artillery from <code>ship_type_supply_ship</code>, fixed <code>torpedo_boat_destroyer</code> secondary blind spots, bound <code>[ShipTemplate.GetModifier]</code> in <code>gui/ship_designer_popup.gui</code>, eliminated YAML dupes/orphans/missing keys, and rewrote 10 misleading descriptions.</li>
+          <li><strong>[P0 — Completed in Review] Reconcile Simulator Physics &amp; AI Complexity Modeling</strong> — Upgraded <code>sim_overhaul.py</code> to Victoria 3 1.15.1 flat armor subtraction, damage-reduction modifiers, ordinal modification-level budgeting, CLI path arguments, and comprehensive <code>--assert-mode</code> gates; recalibrated submarine stats to restore the 4-pole counter loop.</li>
+          <li><strong>[P1 — Recommended Next] Decompose sim_overhaul.py and Add Parser/Combat Unit Tests</strong> — Split <code>sim_overhaul.py</code> into <code>tools/vfs_parser.py</code>, <code>tools/combat_sim.py</code>, and <code>sim_overhaul.py</code> CLI wrapper, and add <code>unittest</code> suites covering <code>INJECT:</code> additive script-value merging and edge-case Clausewitz parsing without requiring local Steam paths.</li>
+          <li><strong>[P1 — Recommended Next] Deduplicate Binary Assets &amp; Finalize Workshop Metadata</strong> — Remove the redundant root <code>thumbnail.png</code> (retaining <code>.metadata/thumbnail.png</code>), assign the Steam Workshop <code>id</code> in <code>.metadata/metadata.json</code> upon first upload, and keep a single canonical source of truth.</li>
+          <li><strong>[P2 — Strategic Evolution] Migrate Ship Type Overlays &amp; Ship NTE Compatch</strong> — Evaluate migrating <code>00_ship_types.txt</code> slot pools to targeted per-ship <code>INJECT:</code>/<code>REPLACE:</code> overlays (or a Python code generator for the 22 ship blocks) to minimize 1.15.x patch merge effort, and deliver the planned <em>Naval Treaty Expanded</em> compatch tying <code>je_naval_arms_race</code> to global naval limitation treaties.</li>
+          <li><strong>[P2 — Backlog Alignment] Deliver Phase 3 Economic &amp; Battle Condition Extensions</strong> — Implement the remaining Phase 3 backlog items tracked in <code>plan.md</code> (<code>building_port</code> / <code>building_shipyard</code> PM economic feedback loops and <code>naval_battle_conditions</code> overhaul) once 1836–1936 observer campaign telemetry confirms current balance.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>Migration Notes</h3>
+        <p>All P0/P1 script, GUI, localization, and simulator fixes have already been applied and verified with <code>python -B sim_overhaul.py --assert-mode</code> (exit code <code>0</code>, 0 BOM errors, 0 localization errors, 0 unknown 1.15.1 modifier keys). Next steps before a public Workshop release are: (1) run a short 1836–1936 observer campaign in Victoria 3 1.15.1 to verify zero runtime entries in <code>logs/error.log</code>; (2) verify the live 10-slot Ship Designer tooltip breakdown in-game; and (3) split <code>sim_overhaul.py</code> into testable modules alongside GitHub CI for offline checks.</p>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

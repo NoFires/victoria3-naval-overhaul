@@ -1,5 +1,5 @@
 ﻿ship_mod_slot_hull = {
-	icon = "gfx/interface/icons/military_icons/navy_icons/armor_navy.dds"
+	icon = "gfx/interface/icons/military_icons/navy_icons/hull_healthpoints_navy.dds"
 }
 
 ship_mod_slot_armor = {
@@ -11,7 +11,7 @@ ship_mod_slot_guns = {
 }
 
 ship_mod_slot_secondary = {
-	icon = "gfx/interface/icons/military_icons/navy_icons/average_damage_navy.dds"
+	icon = "gfx/interface/icons/military_icons/navy_icons/screening.dds"
 }
 
 ship_mod_slot_propulsion = {
@@ -23,21 +23,21 @@ ship_mod_slot_range = {
 }
 
 ship_mod_slot_utility_1 = {
-	icon = "gfx/interface/icons/military_icons/navy_icons/supplies_navy.dds"
+	icon = "gfx/interface/icons/military_icons/navy_icons/detection_navy.dds"
 	utility = yes
 }
 
 ship_mod_slot_utility_2 = {
-	icon = "gfx/interface/icons/military_icons/navy_icons/supplies_navy.dds"
+	icon = "gfx/interface/icons/military_icons/navy_icons/crew_casualties.dds"
 	utility = yes
 }
 
 ship_mod_slot_utility_3 = {
-	icon = "gfx/interface/icons/military_icons/navy_icons/supplies_navy.dds"
+	icon = "gfx/interface/icons/military_icons/navy_icons/critical_chance_navy.dds"
 	utility = yes
 }
 
 ship_mod_slot_utility_4 = {
-	icon = "gfx/interface/icons/military_icons/navy_icons/supplies_navy.dds"
+	icon = "gfx/interface/icons/military_icons/navy_icons/supply_efficiency.dds"
 	utility = yes
 }

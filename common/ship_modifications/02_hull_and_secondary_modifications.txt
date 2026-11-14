@@ -5,22 +5,25 @@
 ship_mod_hull_standard = {
 	type = ship_mod_slot_hull
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_low.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_armor_light"
 	modifier = {
 		ship_hit_points_max_mult = 0.05
 		ship_supply_capacity_add = 5
 	}
 	construction_goods = {
-		goods_input_wood_add = 25
+		goods_input_wood_add = 40
 	}
 	ai_weight = {
-		value = 1.0
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_low_mult
 	}
 }
 
 ship_mod_hull_reinforced = {
 	type = ship_mod_slot_hull
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_high.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_armor_heavy"
 	unlocking_technologies = { ironclad_tech }
 	modifier = {
 		ship_hit_points_max_mult = 0.20
@@ -29,12 +32,13 @@ ship_mod_hull_reinforced = {
 		ship_supply_capacity_add = -4
 	}
 	construction_goods = {
-		goods_input_steel_add = 45
-		goods_input_iron_add = 30
+		goods_input_steel_add = 85
+		goods_input_iron_add = 60
 	}
 	ai_weight = {
-		value = 1.25
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_high_mult
 		multiply = ship_mod_capital_doctrine
 	}
 }
@@ -42,6 +46,7 @@ ship_mod_hull_reinforced = {
 ship_mod_hull_lightweight = {
 	type = ship_mod_slot_hull
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_propulsion_high.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_propulsion_heavy"
 	unlocking_technologies = { screw_frigate }
 	modifier = {
 		ship_hit_points_max_mult = -0.10
@@ -50,12 +55,13 @@ ship_mod_hull_lightweight = {
 		ship_supply_capacity_add = 12
 	}
 	construction_goods = {
-		goods_input_steel_add = 30
-		goods_input_engines_add = 15
+		goods_input_steel_add = 65
+		goods_input_engines_add = 35
 	}
 	ai_weight = {
-		value = 1.20
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_mid_mult
 		multiply = ship_mod_jeune_ecole_doctrine
 	}
 }
@@ -63,6 +69,7 @@ ship_mod_hull_lightweight = {
 ship_mod_hull_subdivided = {
 	type = ship_mod_slot_hull
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_mid.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_armor_medium"
 	unlocking_technologies = { pre_dreadnought_tech }
 	modifier = {
 		ship_hit_points_max_mult = 0.12
@@ -71,11 +78,13 @@ ship_mod_hull_subdivided = {
 		ship_supply_capacity_add = -3
 	}
 	construction_goods = {
-		goods_input_steel_add = 50
+		goods_input_steel_add = 100
+		goods_input_tools_add = 30
 	}
 	ai_weight = {
-		value = 1.35
+		value = 1.20
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_high_mult
 		multiply = ship_mod_capital_doctrine
 	}
 }
@@ -87,38 +96,44 @@ ship_mod_hull_subdivided = {
 ship_mod_secondary_standard = {
 	type = ship_mod_slot_secondary
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_low.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_light"
 	modifier = {
 		ship_hull_damage_add = 2
 		ship_crew_damage_add = 2
 		ship_screening_add = 3
 	}
 	construction_goods = {
-		goods_input_artillery_add = 10
+		goods_input_artillery_add = 25
 	}
 	ai_weight = {
-		value = 1.0
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_low_mult
 	}
 }
 
 ship_mod_secondary_torpedo_defense = {
 	type = ship_mod_slot_secondary
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_mid.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_medium"
 	unlocking_technologies = { self_propelled_torpedoes }
 	modifier = {
+		ship_power_projection_add = 10
 		ship_screening_add = 14
 		ship_readiness_gain_add = 4
 		ship_battle_against_ship_type_torpedo_boat_accuracy_mult = 0.35
+		ship_battle_against_ship_type_torpedo_boat_destroyer_accuracy_mult = 0.45
 		ship_battle_against_ship_type_destroyer_accuracy_mult = 0.25
 		ship_visibility_add = 2
 	}
 	construction_goods = {
-		goods_input_artillery_add = 25
-		goods_input_ammunition_add = 20
+		goods_input_artillery_add = 60
+		goods_input_ammunition_add = 45
 	}
 	ai_weight = {
-		value = 1.30
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_mid_mult
 		multiply = ship_mod_capital_doctrine
 	}
 }
@@ -126,20 +141,24 @@ ship_mod_secondary_torpedo_defense = {
 ship_mod_secondary_heavy_aa = {
 	type = ship_mod_slot_secondary
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_high.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_heavy"
 	unlocking_technologies = { battleship_tech }
 	modifier = {
+		ship_power_projection_add = 18
 		ship_screening_add = 24
 		ship_battle_against_ship_type_torpedo_boat_accuracy_mult = 0.20
+		ship_battle_against_ship_type_torpedo_boat_destroyer_accuracy_mult = 0.30
 		ship_battle_against_ship_type_destroyer_accuracy_mult = 0.15
 		ship_visibility_add = 4
 	}
 	construction_goods = {
-		goods_input_artillery_add = 35
-		goods_input_ammunition_add = 30
+		goods_input_artillery_add = 80
+		goods_input_ammunition_add = 65
 	}
 	ai_weight = {
-		value = 1.25
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_high_mult
 		multiply = ship_mod_power_projection_doctrine
 	}
 }
@@ -147,18 +166,20 @@ ship_mod_secondary_heavy_aa = {
 ship_mod_secondary_asw_depth_charges = {
 	type = ship_mod_slot_secondary
 	icon = "gfx/interface/icons/military_icons/navy_icons/supplies_navy.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_medium"
 	unlocking_technologies = { destroyer }
 	modifier = {
 		ship_detection_add = 12
 		ship_battle_against_ship_type_submarine_accuracy_mult = 0.60
 	}
 	construction_goods = {
-		goods_input_ammunition_add = 30
-		goods_input_steel_add = 20
+		goods_input_ammunition_add = 65
+		goods_input_steel_add = 50
 	}
 	ai_weight = {
-		value = 1.50
+		value = 1.25
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_mid_mult
 		multiply = ship_mod_coastal_defence_doctrine
 	}
 }
@@ -166,8 +187,10 @@ ship_mod_secondary_asw_depth_charges = {
 ship_mod_secondary_dual_purpose = {
 	type = ship_mod_slot_secondary
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_high.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_heavy"
 	unlocking_technologies = { battleship_tech }
 	modifier = {
+		ship_power_projection_add = 25
 		ship_hull_damage_add = 6
 		ship_crew_damage_add = 6
 		ship_screening_add = 15
@@ -176,12 +199,23 @@ ship_mod_secondary_dual_purpose = {
 		ship_supply_capacity_add = -4
 	}
 	construction_goods = {
-		goods_input_artillery_add = 40
-		goods_input_ammunition_add = 35
+		goods_input_artillery_add = 95
+		goods_input_ammunition_add = 75
 	}
 	ai_weight = {
-		value = 1.30
+		value = 1.15
 		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_high_mult
 		multiply = ship_mod_power_projection_doctrine
 	}
+}
+
+ship_mod_supply_ship_hull_light = {
+	type = ship_mod_slot_hull
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_low.dds"
+}
+
+ship_mod_supply_ship_secondary_light = {
+	type = ship_mod_slot_secondary
+	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_low.dds"
 }

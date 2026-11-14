@@ -1,5 +1,4 @@
-
-ship_designer_popup_type = {
+﻿ship_designer_popup_type = {
 	name = ship_designer_popup
 }
 
@@ -98,9 +97,15 @@ types ship_designer_popup_types
 													visible = "[LessThanOrEqualTo_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)3')]"
 												}
 												modification_slot = {
-													visible = "[GreaterThan_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)3')]"
+													visible = "[And(GreaterThan_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)3'), LessThanOrEqualTo_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)6'))]"
 													blockoverride "slot_size" {
 														size = { 308 148 }
+													}
+												}
+												modification_slot = {
+													visible = "[GreaterThan_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)6')]"
+													blockoverride "slot_size" {
+														size = { 308 186 }
 													}
 												}
 											}
