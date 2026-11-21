@@ -1,0 +1,40 @@
+﻿naval_arms_race_progress_bar = {
+	name = "naval_arms_race_progress_bar"
+	desc = "naval_arms_race_progress_bar_desc"
+
+	default_green = yes
+
+	start_value = 20
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		if = {
+			limit = {
+				owner = { navy_size >= 70 }
+			}
+			add = {
+				value = 4
+				desc = "naval_arms_race_progress_surge_desc"
+			}
+		}
+		else_if = {
+			limit = {
+				owner = { navy_size >= 55 }
+			}
+			add = {
+				value = 2
+				desc = "naval_arms_race_progress_steady_desc"
+			}
+		}
+		else_if = {
+			limit = {
+				owner = { navy_size < 45 }
+			}
+			add = {
+				value = -2
+				desc = "naval_arms_race_progress_stall_desc"
+			}
+		}
+	}
+}

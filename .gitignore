@@ -7,3 +7,6 @@ __pycache__/
 Thumbs.db
 *.tmp
 *.bak
+
+# oh-my-claudecode session state
+.omc/

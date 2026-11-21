@@ -13,6 +13,7 @@ utility_mod_fire_control_radar = {
 		ship_detection_add = 15
 		ship_visibility_add = 4
 		ship_supply_capacity_add = -4
+		ship_battle_condition_accuracy_penalty_mult = -0.35
 	}
 	construction_goods = {
 		goods_input_radios_add = 90
@@ -49,11 +50,12 @@ utility_mod_sonar_suite = {
 }
 
 utility_mod_damage_control = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_2
 	icon = "gfx/interface/icons/military_icons/navy_icons/crew_casualties.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_armor_medium"
 	unlocking_technologies = { pre_dreadnought_tech }
 	modifier = {
+		ship_power_projection_add = 12
 		ship_suffered_hull_damage_mult = -0.15
 		ship_suffered_crit_chance_mult = -0.25
 		ship_suffered_crew_damage_mult = -0.15
@@ -71,11 +73,12 @@ utility_mod_damage_control = {
 }
 
 utility_mod_aa_director = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_3
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_high.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_heavy"
 	unlocking_technologies = { military_aviation }
 	modifier = {
+		ship_power_projection_add = 12
 		ship_screening_add = 25
 		ship_readiness_gain_add = 4
 		ship_visibility_add = 3
@@ -93,7 +96,7 @@ utility_mod_aa_director = {
 }
 
 utility_mod_torpedo_tubes = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_3
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_high.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_heavy"
 	unlocking_technologies = { self_propelled_torpedoes }
@@ -118,11 +121,12 @@ utility_mod_torpedo_tubes = {
 }
 
 utility_mod_autoloader = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_3
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_guns_mid.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_guns_medium"
 	unlocking_technologies = { dreadnought_tech }
 	modifier = {
+		ship_power_projection_add = 14
 		ship_readiness_gain_add = 8
 		ship_accuracy_add = -1
 		ship_supply_capacity_add = -4
@@ -140,7 +144,7 @@ utility_mod_autoloader = {
 }
 
 utility_mod_dazzle_camo = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_2
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_low.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_armor_light"
 	unlocking_technologies = { dreadnought_tech }
@@ -161,7 +165,7 @@ utility_mod_dazzle_camo = {
 }
 
 utility_mod_snorkel = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_4
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_range_mid.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_range_medium"
 	unlocking_technologies = { submarine }
@@ -205,14 +209,14 @@ utility_mod_hydrophone_array = {
 }
 
 utility_mod_extra_bunkers = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_4
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_range_high.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_range_long"
 	modifier = {
-		ship_max_distance_to_port_add = 180
-		ship_supply_capacity_add = 20
-		ship_movement_speed_add = -1
-		ship_visibility_add = 2
+		ship_max_distance_to_port_add = 80
+		ship_supply_capacity_add = 10
+		ship_movement_speed_add = -1.5
+		ship_visibility_add = 4
 	}
 	construction_goods = {
 		goods_input_wood_add = 60
@@ -227,11 +231,12 @@ utility_mod_extra_bunkers = {
 }
 
 utility_mod_reinforced_magazine = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_2
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_armor_high.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_armor_heavy"
 	unlocking_technologies = { dreadnought_tech }
 	modifier = {
+		ship_power_projection_add = 12
 		ship_armor_add = 10
 		ship_suffered_crit_chance_mult = -0.35
 		ship_movement_speed_add = -1
@@ -249,7 +254,7 @@ utility_mod_reinforced_magazine = {
 }
 
 utility_mod_minesweeping_gear = {
-	type = ship_mod_slot_utility_1
+	type = ship_mod_slot_utility_3
 	icon = "gfx/interface/icons/military_icons/navy_icons/ship_designer_icons/ship_designer_propulsion_mid.dds"
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_propulsion_medium"
 	unlocking_technologies = { sea_lane_strategies }
@@ -276,9 +281,11 @@ utility_mod_scouting_seaplane = {
 	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_range_long"
 	unlocking_technologies = { military_aviation }
 	modifier = {
+		ship_power_projection_add = 12
 		ship_detection_add = 18
 		ship_visibility_add = 2
 		ship_supply_capacity_add = -6
+		ship_battle_condition_accuracy_penalty_mult = -0.15
 	}
 	construction_goods = {
 		goods_input_aeroplanes_add = 75
@@ -289,5 +296,28 @@ utility_mod_scouting_seaplane = {
 		multiply = ship_mod_market_multiplier
 		multiply = ship_mod_budget_high_mult
 		multiply = ship_mod_capital_doctrine
+	}
+}
+
+utility_mod_underway_replenishment = {
+	type = ship_mod_slot_utility_4
+	icon = "gfx/interface/icons/military_icons/navy_icons/supply_efficiency.dds"
+	clicksound = "event:/SFX/UI/ShipDesigner/shipdesigner_modification_range_long"
+	unlocking_technologies = { sea_lane_strategies }
+	modifier = {
+		ship_power_projection_add = 10
+		ship_supply_capacity_add = 18
+		ship_readiness_gain_add = 4
+		ship_visibility_add = 3
+	}
+	construction_goods = {
+		goods_input_steel_add = 55
+		goods_input_engines_add = 40
+	}
+	ai_weight = {
+		value = 1.25
+		multiply = ship_mod_market_multiplier
+		multiply = ship_mod_budget_mid_mult
+		multiply = ship_mod_power_projection_doctrine
 	}
 }

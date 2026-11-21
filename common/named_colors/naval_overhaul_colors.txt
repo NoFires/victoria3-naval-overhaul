@@ -1,0 +1,8 @@
+﻿# Iron & Steam Naval Overhaul - journal map-mode colors
+colors = {
+	naval_overhaul_race_red = hsv { 0.00 0.80 0.85 }
+	naval_overhaul_frozen_blue = hsv { 0.58 0.55 0.80 }
+	naval_overhaul_cooled_grey = hsv { 0.00 0.00 0.55 }
+	naval_overhaul_escalator_violet = hsv { 0.78 0.60 0.80 }
+	naval_overhaul_rival_amber = hsv { 0.10 0.75 0.90 }
+}

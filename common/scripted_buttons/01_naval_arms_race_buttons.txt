@@ -1,0 +1,68 @@
+﻿naval_arms_race_emergency_budget_btn = {
+	name = "naval_arms_race_emergency_budget_btn"
+	desc = "naval_arms_race_emergency_budget_btn_desc"
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_modifier = modifier_naval_arms_race_emergency_budget }
+		NOT = { has_modifier = modifier_naval_arms_race_diplomatic_restraint }
+	}
+
+	cooldown = { days = 365 }
+
+	ai_chance = {
+		value = 10
+		if = {
+			limit = { is_at_war = yes }
+			add = 20
+		}
+	}
+
+	effect = {
+		add_modifier = {
+			name = modifier_naval_arms_race_emergency_budget
+			days = 365
+		}
+		je:je_naval_arms_race ?= {
+			add_progress = { value = 15 name = naval_arms_race_progress_bar }
+		}
+	}
+}
+
+naval_arms_race_diplomatic_inquiry_btn = {
+	name = "naval_arms_race_diplomatic_inquiry_btn"
+	desc = "naval_arms_race_diplomatic_inquiry_btn_desc"
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_modifier = modifier_naval_arms_race_diplomatic_restraint }
+		NOT = { has_modifier = modifier_naval_arms_race_emergency_budget }
+	}
+
+	cooldown = { days = 365 }
+
+	ai_chance = {
+		value = 5
+		if = {
+			limit = { infamy >= 25 }
+			add = 15
+		}
+	}
+
+	effect = {
+		add_modifier = {
+			name = modifier_naval_arms_race_diplomatic_restraint
+			days = 365
+		}
+		change_infamy = -2
+		je:je_naval_arms_race ?= {
+			add_progress = { value = -10 name = naval_arms_race_progress_bar }
+		}
+	}
+}

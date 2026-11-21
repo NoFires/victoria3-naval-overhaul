@@ -4,6 +4,136 @@
 	group = je_group_foreign_affairs
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
+	# Engine-managed: applied on activation, removed by every outcome (incl. timeout).
+	modifiers_while_active = { modifier_naval_arms_race_momentum }
+	# A race stuck between 40 and 80 hulls ends after 5 years, matching the old 60-month momentum.
+	timeout = 1825
+
+	scripted_progress_bar = naval_arms_race_progress_bar
+	scripted_button = naval_arms_race_emergency_budget_btn
+	scripted_button = naval_arms_race_diplomatic_inquiry_btn
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = je_naval_arms_race_status_treaty_escalator
+				trigger = {
+					has_variable = nte_escalator_clause_active
+				}
+			}
+			triggered_desc = {
+				desc = je_naval_arms_race_status_wartime
+				trigger = {
+					is_at_war = yes
+				}
+			}
+			triggered_desc = {
+				desc = je_naval_arms_race_status_leading
+				trigger = {
+					any_rival_country = { always = yes }
+					NOT = { any_rival_country = { navy_size > root.navy_size } }
+				}
+			}
+			triggered_desc = {
+				desc = je_naval_arms_race_status_trailing
+				trigger = {
+					any_rival_country = { navy_size > root.navy_size }
+				}
+			}
+			triggered_desc = {
+				desc = je_naval_arms_race_status_active
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+
+	# Map mode: who is racing, who a treaty froze, who just cooled down.
+	# Stripes: treaty-sanctioned rearmament (escalator clause) and rivals targeted by a race.
+	map_color = {
+		if = {
+			limit = { owner ?= { has_journal_entry = je_naval_arms_race } }
+			value = "naval_overhaul_race_red"
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					OR = {
+						has_variable = naval_arms_race_frozen_cd
+						has_variable = overhaul_arms_race_paused_by_treaty
+					}
+				}
+			}
+			value = "naval_overhaul_frozen_blue"
+		}
+		else_if = {
+			limit = { owner ?= { has_variable = naval_arms_race_cooldown_var } }
+			value = "naval_overhaul_cooled_grey"
+		}
+	}
+
+	map_color_second = {
+		if = {
+			limit = {
+				owner ?= {
+					has_journal_entry = je_naval_arms_race
+					has_variable = nte_escalator_clause_active
+				}
+			}
+			value = "naval_overhaul_escalator_violet"
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					NOT = { has_journal_entry = je_naval_arms_race }
+					any_rivaling_country = { has_journal_entry = je_naval_arms_race }
+				}
+			}
+			value = "naval_overhaul_rival_amber"
+		}
+	}
+
+	map_tooltip = {
+		if = {
+			limit = { owner ?= { has_journal_entry = je_naval_arms_race } }
+			custom_tooltip_no_bullet = "naval_overhaul_map_tt_racing"
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					OR = {
+						has_variable = naval_arms_race_frozen_cd
+						has_variable = overhaul_arms_race_paused_by_treaty
+					}
+				}
+			}
+			custom_tooltip_no_bullet = "naval_overhaul_map_tt_frozen"
+		}
+		else_if = {
+			limit = { owner ?= { has_variable = naval_arms_race_cooldown_var } }
+			custom_tooltip_no_bullet = "naval_overhaul_map_tt_cooled"
+		}
+		if = {
+			limit = {
+				owner ?= {
+					has_journal_entry = je_naval_arms_race
+					has_variable = nte_escalator_clause_active
+				}
+			}
+			custom_tooltip_no_bullet = "naval_overhaul_map_tt_escalator_stripe"
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					NOT = { has_journal_entry = je_naval_arms_race }
+					any_rivaling_country = { has_journal_entry = je_naval_arms_race }
+				}
+			}
+			custom_tooltip_no_bullet = "naval_overhaul_map_tt_rival_stripe"
+		}
+	}
+
 	activation_description = {
 		always = yes
 	}
@@ -19,8 +149,9 @@
 	possible = {
 		has_technology_researched = dreadnought_tech
 		navy_size >= 40
-		NOT = { has_variable = naval_arms_race_completed }
+		NOT = { has_variable = naval_arms_race_cooldown_var }
 		NOT = { has_variable = naval_arms_race_frozen_cd }
+		NOT = { has_variable = overhaul_arms_race_paused_by_treaty }
 		NOR = {
 			AND = {
 				has_variable = gnl_participating_country
@@ -31,9 +162,9 @@
 	}
 
 	immediate = {
-		add_modifier = {
-			name = modifier_naval_arms_race_momentum
-			months = 60
+		set_variable = {
+			name = naval_arms_race_grace_var
+			months = 3
 		}
 		debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_STARTED|country=[THIS.GetCountry.GetNameNoFormatting]"
 	}
@@ -44,10 +175,14 @@
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
+			NOT = { has_variable = naval_arms_race_grace_var }
 			navy_size >= 80
 		}
 		effect = {
-			set_variable = naval_arms_race_completed
+			set_variable = {
+				name = naval_arms_race_cooldown_var
+				months = 36
+			}
 			debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_COMPLETED|country=[THIS.GetCountry.GetNameNoFormatting]"
 			trigger_event = {
 				id = naval_overhaul.1
@@ -63,6 +198,7 @@
 		conclusion_desc = je_naval_arms_race_treaty_freeze_desc
 		trigger = {
 			OR = {
+				has_variable = overhaul_arms_race_paused_by_treaty
 				AND = {
 					has_variable = gnl_participating_country
 					NOT = { has_variable = nte_escalator_clause_active }
@@ -77,13 +213,45 @@
 			}
 			debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_FROZEN_BY_TREATY|country=[THIS.GetCountry.GetNameNoFormatting]"
 			if = {
-				limit = { has_modifier = modifier_naval_arms_race_momentum }
-				remove_modifier = modifier_naval_arms_race_momentum
+				limit = { has_modifier = modifier_naval_arms_race_focus }
+				remove_modifier = modifier_naval_arms_race_focus
 			}
+		}
+	}
+
+	outcome = {
+		header = je_naval_arms_race_shrink_header
+		effect_header = je_naval_arms_race_shrink_effect_header
+		color = "red_negative"
+		conclusion_desc = je_naval_arms_race_shrink_desc
+		trigger = {
+			NOT = { has_variable = naval_arms_race_grace_var }
+			navy_size < 40
+		}
+		effect = {
+			set_variable = {
+				name = naval_arms_race_cooldown_var
+				months = 24
+			}
+			debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_ABORTED_SHRINK|country=[THIS.GetCountry.GetNameNoFormatting]"
 			if = {
 				limit = { has_modifier = modifier_naval_arms_race_focus }
 				remove_modifier = modifier_naval_arms_race_focus
 			}
+		}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			set_variable = {
+				name = naval_arms_race_cooldown_var
+				months = 24
+			}
+			debug_log = "V3NAVY_EVENT|date=[TimeKeeper.GetCurrentDate.GetString]|event=ARMS_RACE_TIMED_OUT|country=[THIS.GetCountry.GetNameNoFormatting]"
 		}
 	}
 
@@ -99,8 +267,8 @@
 		}
 		effect = {
 			if = {
-				limit = { has_modifier = modifier_naval_arms_race_momentum }
-				remove_modifier = modifier_naval_arms_race_momentum
+				limit = { has_modifier = modifier_naval_arms_race_focus }
+				remove_modifier = modifier_naval_arms_race_focus
 			}
 		}
 	}

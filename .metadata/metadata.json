@@ -1,7 +1,7 @@
 {
   "name" : "Iron & Steam: Naval Overhaul",
   "id" : "iron_and_steam_naval_overhaul",
-  "version" : "0.1.0",
+  "version" : "0.2.0",
   "supported_game_version" : "1.15.*",
   "short_description" : "[Early Demo] Reworks naval detection & battle size scaling, expands the ship designer into a 10-slot system with anti-stacking tradeoffs, strengthens blockades/bombardment, and preserves INJECT/REPLACE mod compatibility.",
   "tags" : [

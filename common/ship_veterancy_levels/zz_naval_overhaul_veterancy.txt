@@ -1,8 +1,4 @@
-﻿ship_veterancy_none = {
-	icon = "gfx/interface/icons/military_icons/unit_veterancy/no_veterancy.dds"
-}
-
-ship_veterancy_1 = {
+﻿REPLACE:ship_veterancy_1 = {
 	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy1.dds"
 	experience_threshold = 80
 	modifier = {
@@ -14,7 +10,7 @@ ship_veterancy_1 = {
 	}
 }
 
-ship_veterancy_2 = {
+REPLACE:ship_veterancy_2 = {
 	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy2.dds"
 	experience_threshold = 180
 	modifier = {
@@ -26,7 +22,7 @@ ship_veterancy_2 = {
 	}
 }
 
-ship_veterancy_3 = {
+REPLACE:ship_veterancy_3 = {
 	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy3.dds"
 	experience_threshold = 360
 	modifier = {
@@ -39,7 +35,7 @@ ship_veterancy_3 = {
 	}
 }
 
-ship_veterancy_4 = {
+REPLACE:ship_veterancy_4 = {
 	icon = "gfx/interface/icons/military_icons/unit_veterancy/veterancy4.dds"
 	experience_threshold = 700
 	modifier = {

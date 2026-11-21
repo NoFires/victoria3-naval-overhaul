@@ -728,12 +728,18 @@ def simulate_bombardment_and_blockade(defines: Dict[str, Dict[str, Any]], days: 
     }
 
 
-def nte_effective_tonnage(spec: ShipSpec) -> float:
-    """Exact mirror of Naval Treaty Expanded common/script_values/nte_ship_values.txt."""
+def _nte_scaled_bonus(value: float, threshold: float, divisor: float, cap: float) -> float:
+    """`if value > threshold: add min(cap, (value - threshold) / divisor)`."""
+    if value <= threshold:
+        return 0.0
+    return min(cap, (value - threshold) / divisor)
+
+
+def nte_effective_tonnage(spec: ShipSpec, jeune_ecole: bool = False) -> float:
+    """Mirror of Naval Treaty Expanded common/script_values/nte_ship_values.txt."""
     capital_bases = {
         "ship_type_monitor": 10.0,
         "ship_type_ship_of_the_line": 12.0,
-        "ship_type_coastal_defense_ship": 14.0,
         "ship_type_early_ironclad": 18.0,
         "ship_type_modern_ironclad": 24.0,
         "ship_type_pre_dreadnought": 30.0,
@@ -751,16 +757,40 @@ def nte_effective_tonnage(spec: ShipSpec) -> float:
     }
     if spec.ship_id in ("ship_type_early_troop_ship", "ship_type_troop_ship"):
         return 0.0
+    if spec.ship_id == "ship_type_coastal_defense_ship":
+        # Checked before the capital group in the script, with its own lower scale.
+        return round(
+            14.0
+            + _nte_scaled_bonus(spec.power_projection, 130.0, 30.0, 10.0)
+            + _nte_scaled_bonus(spec.hp_max, 1400.0, 300.0, 8.0),
+            2,
+        )
     if spec.group == "ship_group_capital_ships":
         base = capital_bases.get(spec.ship_id, 20.0)
-        pp_bonus = min(35.0, max(0.0, spec.power_projection - 100.0) * 0.04)
-        hp_bonus = min(25.0, max(0.0, spec.hp_max - 1600.0) * 0.004)
-        return round(base + pp_bonus + hp_bonus, 2)
+        tonnage = (
+            base
+            + _nte_scaled_bonus(spec.power_projection, 150.0, 22.0, 55.0)
+            + _nte_scaled_bonus(spec.hp_max, 2000.0, 220.0, 50.0)
+        )
+        return round(tonnage, 2)
     if spec.group == "ship_group_cruisers":
         base = cruiser_bases.get(spec.ship_id, 6.0)
-        pp_bonus = min(14.0, max(0.0, spec.power_projection - 100.0) * 0.03)
-        hp_bonus = min(10.0, max(0.0, spec.hp_max - 700.0) * 0.003)
-        return round(base + pp_bonus + hp_bonus, 2)
+        tonnage = (
+            base
+            + _nte_scaled_bonus(spec.power_projection, 120.0, 25.0, 22.0)
+            + _nte_scaled_bonus(spec.hp_max, 1200.0, 220.0, 18.0)
+        )
+        # 10,000t Treaty Cruiser surcharge takes priority over the Jeune Ecole discount.
+        if spec.ship_id not in ("ship_type_aircraft_carrier", "ship_type_seaplane_tender") and (
+            spec.hp_max >= 3400.0 or spec.power_projection >= 380.0
+        ):
+            tonnage += 8.0
+        elif jeune_ecole:
+            tonnage *= 0.72
+        return round(tonnage, 2)
+    if spec.group == "ship_group_torpedo_craft":
+        # Treaty-exempt: 0 combat tonnage (nte_ship_values.txt has no torpedo branch).
+        return 0.0
     return 0.0
 
 
@@ -1137,6 +1167,28 @@ def main() -> int:
             )
         if specs_default.get("ship_type_supply_ship") and specs_default["ship_type_supply_ship"].construction_goods.get("artillery", 0.0) > 0:
             failures.append("Supply ship default consumes artillery!")
+        tonnage_by_id = {sid: nte_effective_tonnage(sp) for sid, sp in specs_default.items()}
+        for sid in ("ship_type_destroyer", "ship_type_submarine", "ship_type_torpedo_boat"):
+            actual = tonnage_by_id[sid]
+            if actual != 0:
+                failures.append(f"NTE tonnage for {sid}: treaty-exempt, expected 0, actual {actual:.2f}")
+        for sid in ("ship_type_early_troop_ship", "ship_type_troop_ship"):
+            actual = tonnage_by_id[sid]
+            if actual != 0:
+                failures.append(f"NTE tonnage for {sid}: expected 0, actual {actual:.2f}")
+        cap_t = tonnage_by_id["ship_type_dreadnought"]
+        cru_t = tonnage_by_id["ship_type_light_cruiser"]
+        if not cap_t > cru_t > 0:
+            failures.append(
+                f"NTE tonnage ordering: expected capital > cruiser > 0, "
+                f"actual dreadnought={cap_t:.2f}, light_cruiser={cru_t:.2f}"
+            )
+        carrier_t = tonnage_by_id["ship_type_aircraft_carrier"]
+        if carrier_t <= 0:
+            failures.append(f"NTE tonnage for ship_type_aircraft_carrier: expected > 0, actual {carrier_t:.2f}")
+        negative_t = sorted(sid for sid, t in tonnage_by_id.items() if t < 0)
+        if negative_t:
+            failures.append(f"NTE tonnage negative for: {negative_t}")
         if r1["avg_exchange_a_to_b"] >= 0.90:
             failures.append(f"Match 1 failed: unscreened DN vs Subs exchange={r1['avg_exchange_a_to_b']:.2f} (expected < 0.90)")
         if r2["avg_exchange_a_to_b"] <= 1.35:

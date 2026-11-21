@@ -1,0 +1,57 @@
+﻿# ==============================================================================
+# Iron & Steam Naval Overhaul - Arms Race & Flavor Modifiers
+# ==============================================================================
+
+modifier_naval_arms_race_emergency_budget = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_rifle_positive.dds
+	building_shipyard_throughput_add = 0.15
+	country_military_goods_cost_mult = 0.10
+}
+
+modifier_naval_arms_race_diplomatic_restraint = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_documents_positive.dds
+	country_influence_add = 100
+	country_prestige_from_navy_power_projection_mult = -0.05
+}
+
+modifier_naval_ironclad_transition_strain = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_gear_negative.dds
+	building_shipyard_throughput_add = -0.05
+	country_bureaucracy_mult = -0.03
+}
+
+modifier_naval_ironclad_modernization_drive = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_gear_positive.dds
+	building_shipyard_throughput_add = 0.10
+	state_capitalists_investment_pool_efficiency_mult = 0.05
+}
+
+modifier_naval_radar_breakthrough = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_gear_positive.dds
+	ship_detection_add = 5
+	ship_accuracy_add = 1
+}
+
+modifier_naval_convoy_doctrine_reform = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_flag_positive.dds
+	ship_screening_add = 8
+	ship_readiness_gain_mult = 0.05
+}
+
+modifier_naval_submarine_crisis_mobilization = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_rifle_positive.dds
+	ship_readiness_gain_mult = 0.10
+	building_shipyard_throughput_add = 0.08
+}
+
+modifier_naval_aviation_pioneers = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_flag_positive.dds
+	country_prestige_from_navy_power_projection_mult = 0.10
+	ship_detection_add = 4
+}
+
+modifier_naval_flagship_triumph = {
+	icon = gfx/interface/icons/timed_modifier_icons/modifier_flag_positive.dds
+	country_prestige_from_navy_power_projection_mult = 0.12
+	interest_group_ig_armed_forces_approval_add = 2
+}

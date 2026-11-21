@@ -78,7 +78,7 @@ INJECT:ai_strategy_default = {
 			add = 1
 		}
 
-		min = 8
+		min = 12
 	}
 
 	ai_ship_category_weights = {
@@ -116,9 +116,10 @@ INJECT:ai_strategy_default = {
 							has_law_or_variant = law_type:law_jeune_ecole
 						}
 					}
-					subtract = 10
+					subtract = 5
 				}
 			}
+			min = 5
 		}
 		ai_ship_category_coastal_defense = {
 			value = 0
@@ -228,6 +229,7 @@ INJECT:ai_strategy_default = {
 
 			if = {
 				limit = {
+					has_technology_researched = military_aviation
 					OR = {
 						has_law_or_variant = law_type:law_professional_navy
 						has_law_or_variant = law_type:law_jeune_ecole
@@ -235,13 +237,32 @@ INJECT:ai_strategy_default = {
 				}
 				add = 5
 			}
+			else_if = {
+				limit = {
+					has_technology_researched = military_aviation
+					has_law_or_variant = law_type:law_diplomatic_navy
+				}
+				add = 3
+			}
 
 			if = {
-				limit = {
-					has_technology_researched = carrier_tech
-					has_law_or_variant = law_type:law_professional_navy
+				limit = { has_technology_researched = carrier_tech }
+				if = {
+					limit = { has_law_or_variant = law_type:law_professional_navy }
+					add = 15
 				}
-				add = 5
+				else_if = {
+					limit = { has_law_or_variant = law_type:law_diplomatic_navy }
+					add = 12
+				}
+				else_if = {
+					limit = { has_law_or_variant = law_type:law_jeune_ecole }
+					add = 8
+				}
+				else_if = {
+					limit = { has_law_or_variant = law_type:law_merchant_navy }
+					add = 6
+				}
 			}
 		}
 		ai_ship_category_transports = {
