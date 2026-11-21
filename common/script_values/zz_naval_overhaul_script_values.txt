@@ -182,7 +182,7 @@ ship_mod_budget_high_mult = {
 
 	if = {
 		limit = { is_at_war = no }
-		multiply = 0.80
+		multiply = 0.90
 	}
 	else = {
 		multiply = 1.15
@@ -190,11 +190,11 @@ ship_mod_budget_high_mult = {
 
 	if = {
 		limit = { country_rank < rank_value:major_power }
-		multiply = 0.55
+		multiply = 0.78
 	}
 	else_if = {
 		limit = { country_rank < rank_value:great_power }
-		multiply = 0.75
+		multiply = 0.90
 	}
 
 	if = {
@@ -204,9 +204,9 @@ ship_mod_budget_high_mult = {
 				has_strategy = ai_strategy_conservative_agenda
 			}
 		}
-		multiply = 0.75
+		multiply = 0.85
 	}
-	min = 0.10
+	min = 0.35
 }
 
 # Moderate scaling for mid-tier Overhaul ship modifications

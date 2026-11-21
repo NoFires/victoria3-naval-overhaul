@@ -16,14 +16,24 @@ on_naval_battle_won = {
 	}
 }
 
+on_flagship_battle_won = {
+	on_actions = {
+		naval_overhaul_on_flagship_battle_won
+	}
+}
+
 on_monthly_pulse_country = {
 	on_actions = {
 		naval_overhaul_on_monthly_pulse_country
 	}
 	random_events = {
-		chance_to_happen = 5
+		chance_to_happen = 8
 		100 = 0
 		5 = naval_overhaul.2
+		5 = naval_overhaul.3
+		5 = naval_overhaul.4
+		5 = naval_overhaul.5
+		5 = naval_overhaul.6
 	}
 }
 
@@ -78,6 +88,24 @@ naval_overhaul_on_naval_battle_won = {
 			add_modifier = {
 				name = modifier_naval_victory_morale
 				days = 90
+			}
+		}
+	}
+}
+
+naval_overhaul_on_flagship_battle_won = {
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_variable = naval_overhaul_flagship_triumph_cd }
+			}
+			set_variable = {
+				name = naval_overhaul_flagship_triumph_cd
+				days = 1825
+			}
+			trigger_event = {
+				id = naval_overhaul.7
+				popup = yes
 			}
 		}
 	}

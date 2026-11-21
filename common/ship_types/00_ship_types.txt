@@ -104,6 +104,7 @@ ship_type_ship_of_the_line = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -236,6 +237,7 @@ ship_type_monitor = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -366,6 +368,7 @@ ship_type_early_ironclad = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -500,6 +503,7 @@ ship_type_coastal_defense_ship = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -633,6 +637,7 @@ ship_type_modern_ironclad = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -769,6 +774,7 @@ ship_type_pre_dreadnought = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -904,6 +910,7 @@ ship_type_dreadnought = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1036,6 +1043,7 @@ ship_type_super_dreadnought = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1156,6 +1164,7 @@ ship_type_frigate = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1280,6 +1289,7 @@ ship_type_iron_frigate = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1382,6 +1392,7 @@ ship_type_early_troop_ship = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1488,6 +1499,7 @@ ship_type_troop_ship = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1620,6 +1632,7 @@ ship_type_protected_cruiser = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1748,6 +1761,7 @@ ship_type_armored_cruiser = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -1875,6 +1889,7 @@ ship_type_light_cruiser = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -2001,6 +2016,7 @@ ship_type_seaplane_tender = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -2129,6 +2145,7 @@ ship_type_aircraft_carrier = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -2264,12 +2281,13 @@ ship_type_torpedo_boat = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
     default_modifications = {
 		ship_mod_slot_hull = ship_mod_hull_standard
-		ship_mod_slot_secondary = ship_mod_secondary_torpedo_defense
+		ship_mod_slot_secondary = ship_mod_secondary_standard
 		ship_mod_slot_armor = ship_mod_torpedo_boat_armor_medium
 		ship_mod_slot_guns = ship_mod_torpedo_boat_guns_medium
 		ship_mod_slot_propulsion = ship_mod_torpedo_boat_propulsion_medium
@@ -2395,6 +2413,7 @@ ship_type_torpedo_boat_destroyer = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 
@@ -2647,6 +2666,7 @@ ship_type_destroyer = {
         ship_mod_slot_utility_4 = {
 			utility_mod_extra_bunkers
 			utility_mod_landing_skiffs
+			utility_mod_underway_replenishment
 		}
     }
 

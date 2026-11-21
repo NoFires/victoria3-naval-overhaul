@@ -1,0 +1,217 @@
+﻿# ==============================================================================
+# Iron & Steam Naval Overhaul - Naval Battle Conditions (1.15.1)
+# ==============================================================================
+
+naval_condition_night_action = {
+	icon = "gfx/interface/icons/sea_condition_icons/fog.dds"
+
+	possible = {
+		always = yes
+	}
+
+	weight = {
+		value = 1
+		if = {
+			limit = {
+				scope:region = {
+					has_harvest_condition = fog
+				}
+			}
+			multiply = 3
+		}
+		if = {
+			limit = {
+				OR = {
+					scope:attacker = {
+						any_scope_ship = {
+							OR = {
+								is_ship_type = ship_type:ship_type_torpedo_boat
+								is_ship_type = ship_type:ship_type_destroyer
+							}
+						}
+					}
+					scope:defender = {
+						any_scope_ship = {
+							OR = {
+								is_ship_type = ship_type:ship_type_torpedo_boat
+								is_ship_type = ship_type:ship_type_destroyer
+							}
+						}
+					}
+				}
+			}
+			add = 1
+		}
+	}
+
+	period = {
+		value = 0
+	}
+
+	modifier = {
+		ship_accuracy_mult = -0.30
+		ship_screening_mult = -0.15
+		ship_readiness_gain_mult = -0.10
+	}
+}
+
+naval_condition_squall_line = {
+	icon = "gfx/interface/icons/sea_condition_icons/strong_winds.dds"
+
+	possible = {
+		always = yes
+	}
+
+	weight = {
+		value = 1
+		if = {
+			limit = {
+				scope:region = {
+					OR = {
+						has_harvest_condition = strong_winds
+						has_harvest_condition = tropical_storm
+					}
+				}
+			}
+			multiply = 5
+		}
+	}
+
+	period = {
+		value = 8
+	}
+
+	modifier = {
+		ship_accuracy_mult = -0.20
+		ship_movement_speed_mult = -0.15
+		ship_screening_mult = -0.10
+	}
+}
+
+naval_condition_subsurface_ambush = {
+	icon = "gfx/interface/icons/sea_condition_icons/rough_waters.dds"
+
+	possible = {
+		OR = {
+			scope:attacker = {
+				any_scope_ship = {
+					is_ship_type = ship_type:ship_type_submarine
+				}
+			}
+			scope:defender = {
+				any_scope_ship = {
+					is_ship_type = ship_type:ship_type_submarine
+				}
+			}
+		}
+	}
+
+	weight = {
+		value = 2
+		if = {
+			limit = {
+				scope:region = {
+					OR = {
+						has_harvest_condition = fog
+						has_harvest_condition = rough_waters
+					}
+				}
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				scope:attacker = {
+					any_scope_ship = {
+						is_ship_type = ship_type:ship_type_destroyer
+					}
+				}
+				scope:defender = {
+					any_scope_ship = {
+						is_ship_type = ship_type:ship_type_destroyer
+					}
+				}
+			}
+			multiply = 0.5
+		}
+	}
+
+	period = {
+		value = 0
+	}
+
+	modifier = {
+		ship_screening_mult = -0.20
+		ship_readiness_gain_mult = -0.15
+	}
+}
+
+naval_condition_heavy_swell = {
+	icon = "gfx/interface/icons/sea_condition_icons/rough_waters.dds"
+
+	possible = {
+		always = yes
+	}
+
+	weight = {
+		value = 1
+		if = {
+			limit = {
+				scope:region = {
+					OR = {
+						has_harvest_condition = rough_waters
+						has_harvest_condition = cyclone
+					}
+				}
+			}
+			multiply = 5
+		}
+	}
+
+	period = {
+		value = 10
+	}
+
+	modifier = {
+		ship_accuracy_mult = -0.25
+		ship_movement_speed_mult = -0.15
+		ship_readiness_gain_mult = -0.10
+	}
+}
+
+naval_condition_clear_horizon = {
+	icon = "gfx/interface/icons/sea_condition_icons/calm_waters.dds"
+
+	possible = {
+		OR = {
+			scope:attacker = {
+				has_technology_researched = military_aviation
+			}
+			scope:defender = {
+				has_technology_researched = military_aviation
+			}
+		}
+	}
+
+	weight = {
+		value = 1
+		if = {
+			limit = {
+				scope:region = {
+					has_harvest_condition = calm_waters
+				}
+			}
+			multiply = 4
+		}
+	}
+
+	period = {
+		value = 0
+	}
+
+	modifier = {
+		ship_accuracy_mult = 0.15
+		ship_screening_mult = 0.10
+		ship_readiness_gain_mult = 0.10
+	}
+}

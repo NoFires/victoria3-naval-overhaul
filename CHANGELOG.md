@@ -2,6 +2,23 @@
 
 # Changelog — Iron & Steam: Naval Overhaul
 
+## [v0.2.0] - 2026-11-21
+
+### Added
+- **Naval arms race journal**: active-race modifiers, a 5-year timeout with cooldown, status lines for leading / trailing / wartime, a map mode with rival stripes, and a diplomatic inquiry button.
+- **Events**: sail-to-ironclad transition, submarine raiding and convoy reform, fire-control and radar breakthrough, naval aviation trials, and a flagship victory triumph.
+- **Naval battle conditions**: night action, sudden squall, submarine ambush waters, heavy swell, clear horizon.
+- **Underway Replenishment Gear** utility module for all hull types.
+
+### Changed
+- Ship veterancy now uses `REPLACE:` entries in our own file instead of overriding the vanilla file, for better mod compatibility.
+- AI keeps utility slots in peacetime (`SHIP_DESIGN_UTILITY_MOD_MIN_SCORE` 1.65 -> 1.125).
+- Offline simulator treats torpedo craft as treaty-exempt, matching Naval Treaty Expanded.
+
+### Fixed
+- Battle condition triggers now use `scope:attacker` / `scope:defender`.
+- Ship designer hull modifier display null context.
+
 ## [v0.1.1] - 2026-11-14
 
 ### Fixed

@@ -105,3 +105,232 @@ naval_overhaul.2 = {
 		}
 	}
 }
+
+# Event 3: Sail-to-Ironclad Transition Friction
+naval_overhaul.3 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.3.t
+	desc = naval_overhaul.3.d
+	flavor = naval_overhaul.3.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = {
+		has_technology_researched = ironclad_tech
+		navy_size >= 15
+		NOT = { has_variable = naval_overhaul_ironclad_transition_done }
+	}
+
+	immediate = {
+		set_variable = naval_overhaul_ironclad_transition_done
+	}
+
+	option = {
+		name = naval_overhaul.3.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_ironclad_modernization_drive
+			days = 1095
+		}
+		ig:ig_industrialists ?= {
+			add_modifier = {
+				name = modifier_naval_ironclad_modernization_drive
+				days = 730
+			}
+		}
+	}
+
+	option = {
+		name = naval_overhaul.3.b
+		add_modifier = {
+			name = modifier_naval_ironclad_transition_strain
+			days = 730
+		}
+		add_loyalists = {
+			value = small_radicals
+			pop_type = officers
+		}
+	}
+}
+
+# Event 4: Submarine Commerce Raiding & Convoy Reform
+naval_overhaul.4 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.4.t
+	desc = naval_overhaul.4.d
+	flavor = naval_overhaul.4.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = {
+		has_technology_researched = submarine
+		navy_size >= 25
+		NOT = { has_variable = naval_overhaul_sub_crisis_cd }
+	}
+
+	immediate = {
+		set_variable = {
+			name = naval_overhaul_sub_crisis_cd
+			days = 3650
+		}
+	}
+
+	option = {
+		name = naval_overhaul.4.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_convoy_doctrine_reform
+			days = 1095
+		}
+	}
+
+	option = {
+		name = naval_overhaul.4.b
+		add_modifier = {
+			name = modifier_naval_submarine_crisis_mobilization
+			days = 1095
+		}
+	}
+}
+
+# Event 5: Fire-Control & Radar Breakthrough
+naval_overhaul.5 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.5.t
+	desc = naval_overhaul.5.d
+	flavor = naval_overhaul.5.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = {
+		has_technology_researched = carrier_tech
+		navy_size >= 30
+		NOT = { has_variable = naval_overhaul_radar_breakthrough_done }
+	}
+
+	immediate = {
+		set_variable = naval_overhaul_radar_breakthrough_done
+	}
+
+	option = {
+		name = naval_overhaul.5.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_radar_breakthrough
+			days = 1825
+		}
+	}
+
+	option = {
+		name = naval_overhaul.5.b
+		add_modifier = {
+			name = modifier_naval_arms_race_focus
+			days = 1095
+		}
+	}
+}
+
+# Event 6: Naval Aviation Sea Trials
+naval_overhaul.6 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.6.t
+	desc = naval_overhaul.6.d
+	flavor = naval_overhaul.6.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = {
+		has_technology_researched = military_aviation
+		navy_size >= 25
+		NOT = { has_variable = naval_overhaul_aviation_trials_done }
+	}
+
+	immediate = {
+		set_variable = naval_overhaul_aviation_trials_done
+	}
+
+	option = {
+		name = naval_overhaul.6.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_aviation_pioneers
+			days = 1460
+		}
+	}
+
+	option = {
+		name = naval_overhaul.6.b
+		add_modifier = {
+			name = modifier_naval_victory_morale
+			days = 1095
+		}
+	}
+}
+
+# Event 7: Flagship Victory Triumph
+naval_overhaul.7 = {
+	type = country_event
+	placement = root
+	title = naval_overhaul.7.t
+	desc = naval_overhaul.7.d
+	flavor = naval_overhaul.7.f
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	option = {
+		name = naval_overhaul.7.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_naval_flagship_triumph
+			days = 1095
+		}
+	}
+
+	option = {
+		name = naval_overhaul.7.b
+		change_infamy = -3
+		add_modifier = {
+			name = modifier_naval_victory_morale
+			days = 730
+		}
+	}
+}
