@@ -99,13 +99,13 @@ types ship_designer_popup_types
 												modification_slot = {
 													visible = "[And(GreaterThan_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)3'), LessThanOrEqualTo_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)6'))]"
 													blockoverride "slot_size" {
-														size = { 308 126 }
+														size = { 308 147 }
 													}
 												}
 												modification_slot = {
 													visible = "[GreaterThan_int32(GetDataModelSize(ShipDesignerModSlot.GetModifications), '(int32)6')]"
 													blockoverride "slot_size" {
-														size = { 308 164 }
+														size = { 308 184 }
 													}
 												}
 											}
@@ -961,7 +961,7 @@ types ship_designer_popup_types
 
 	type modification_slot = widget {
 		block "slot_size" {
-			size = { 308 88 }
+			size = { 308 110 }
 		}
 
 		background = {
