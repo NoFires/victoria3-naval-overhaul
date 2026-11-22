@@ -2,6 +2,11 @@
 
 # Changelog — Iron & Steam: Naval Overhaul
 
+## [v0.2.1] - 2026-11-22
+
+### Fixed
+- Ship Designer: module icons in the left panel were partially clipped; modification slot heights now fit the 1/2/3-row module grids again.
+
 ## [v0.2.0] - 2026-11-21
 
 ### Added

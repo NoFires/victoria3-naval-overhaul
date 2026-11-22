@@ -1,12 +1,12 @@
 [English](README.md) | [简体中文](README_CN.md)
 
-# Iron & Steam: Naval Overhaul `[Early Demo v0.2.0]`
+# Iron & Steam: Naval Overhaul `[Early Demo v0.2.1]`
 
 [![Steam Workshop](https://img.shields.io/badge/Steam%20Workshop-3726415174-1b2838?logo=steam)](https://steamcommunity.com/sharedfiles/filedetails/?id=3726415174)
 [![Victoria 3](https://img.shields.io/badge/Victoria%203-1.15.*-blue)](https://store.steampowered.com/app/529340)
 [![Multiplayer](https://img.shields.io/badge/Multiplayer-Synchronized-brightgreen)](#version-info)
 
-> **⚠️ Early Demo Notice (`v0.2.0`):** This mod is currently in an **early playable demo** stage. Core naval combat mechanics, the 10-slot ship designer, and offline numerical regression checks are up and running, while long-campaign AI fleet composition, late-game pacing, and additional flavor events are still being actively tuned. Bug reports, balance feedback, and direct collaboration are very welcome!
+> **⚠️ Early Demo Notice (`v0.2.1`):** This mod is currently in an **early playable demo** stage. Core naval combat mechanics, the 10-slot ship designer, and offline numerical regression checks are up and running, while long-campaign AI fleet composition, late-game pacing, and additional flavor events are still being actively tuned. Bug reports, balance feedback, and direct collaboration are very welcome!
 
 **Iron & Steam: Naval Overhaul** is a comprehensive naval warfare overhaul for **Victoria 3 (`1.15.*`)**. It overhauls naval detection, engagement battle size, ship customization, convoy raiding, blockades, and maritime power projection—giving sea control, commerce warfare, and decisive fleet engagements genuine strategic and economic weight.
 
@@ -33,7 +33,7 @@ This mod uses additive injection (`INJECT:` / `TRY_INJECT:`) and targeted replac
 
 ---
 
-## Current Features (`v0.2.0 Demo`)
+## Current Features (`v0.2.1 Demo`)
 
 ### Naval Detection & Battle Size Overhaul
 - Dynamically scales **Naval Battle Size** based on the ratio of fleet **Detection** to enemy **Visibility** (clamped between `0.35x` and `2.5x`), preventing massive main battle fleets from being endlessly stalled by tiny dispersed detachments.
@@ -60,7 +60,7 @@ This mod uses additive injection (`INJECT:` / `TRY_INJECT:`) and targeted replac
 
 ## Version Info
 
-- **Current Version**: `v0.2.0` (Early Demo)
+- **Current Version**: `v0.2.1` (Early Demo)
 - **Supported Languages**: English, 简体中文 (Full bilingual localization)
 - **Multiplayer**: Fully `multiplayer_synchronized = true`
 - **Game Version**: Victoria 3 **`1.15.*`**

@@ -1,12 +1,12 @@
 [English](README.md) | [简体中文](README_CN.md)
 
-# 铁与蒸汽：海军大修 Iron & Steam: Naval Overhaul `[早期测试版 v0.2.0]`
+# 铁与蒸汽：海军大修 Iron & Steam: Naval Overhaul `[早期测试版 v0.2.1]`
 
 [![Steam Workshop](https://img.shields.io/badge/Steam%20Workshop-3726415174-1b2838?logo=steam)](https://steamcommunity.com/sharedfiles/filedetails/?id=3726415174&l=schinese)
 [![Victoria 3](https://img.shields.io/badge/Victoria%203-1.15.*-blue)](https://store.steampowered.com/app/529340)
 [![Multiplayer](https://img.shields.io/badge/Multiplayer-Synchronized-brightgreen)](#版本信息)
 
-> **⚠ 早期测试版说明（v0.2.0 Demo）：**本 Mod 目前仍处于**早期可玩 Demo** 开发阶段。核心海战机制、10 槽舰船设计器以及离线数值回归校验均已可正常运行，但长线 AI 造舰配比、大后期节奏与更多风味事件仍在持续打磨中。非常欢迎反馈 Bug、提出平衡建议，或直接加入协作开发！
+> **⚠ 早期测试版说明（v0.2.1 Demo）：**本 Mod 目前仍处于**早期可玩 Demo** 开发阶段。核心海战机制、10 槽舰船设计器以及离线数值回归校验均已可正常运行，但长线 AI 造舰配比、大后期节奏与更多风味事件仍在持续打磨中。非常欢迎反馈 Bug、提出平衡建议，或直接加入协作开发！
 
 **《铁与蒸汽：海军大修》**是面向 **Victoria 3 (`1.15.*`)** 的海军系统大修 Mod，全面重构海上探测、接敌规模、舰船改装、破交封锁与制海权博弈，让海权争夺、商路袭扰与主力决战真正具备战略与经济分量。
 
@@ -33,7 +33,7 @@
 
 ---
 
-## 当前版本内容（`v0.2.0 Demo`）
+## 当前版本内容（`v0.2.1 Demo`）
 
 ### 海上探测与海战接敌规模重做
 - 基于舰队**探测（Detection）**与**可见度（Visibility）**的比值动态缩放**海战接敌规模**（限制在 `0.35x` 至 `2.5x` 之间），防止庞大的主力舰队被极少数零星分散舰船无限拖住。
@@ -60,7 +60,7 @@
 
 ## 版本信息
 
-- **当前版本**：`v0.2.0`（早期测试版 Demo）
+- **当前版本**：`v0.2.1`（早期测试版 Demo）
 - **支持语言**：简体中文、English（完整双语本地化）
 - **联机支持**：完全支持多人联机同步
 - **支持游戏版本**：Victoria 3 **`1.15.*`**
